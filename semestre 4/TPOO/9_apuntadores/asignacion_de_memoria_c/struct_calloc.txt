@@ -1,0 +1,43 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<conio.h>
+#define max 5
+
+using namespace std;
+
+typedef struct Gato{
+       
+       char raza;
+       int patas;
+       void Mostrar(){
+            printf("funciona\n");
+            }
+       };
+
+int main(){
+
+    int i;
+
+    Gato *pgato1[max],*pgato2;
+
+    pgato2 =(Gato*)calloc(max,sizeof(Gato));
+
+    if(pgato2==NULL)
+        printf("no se asigno memoria");
+
+    for(i=0;i<max;i++)
+        pgato1[i] =(Gato*)malloc(sizeof(Gato));
+    if(pgato1==NULL)
+        printf("no se asigno memoria");    
+    //pgato1[0]->Mostrar();
+    
+    for(i=0;i<max;i++)
+        (pgato2+i)->Mostrar();
+    
+    free(pgato1);    
+    free(pgato2);
+    
+    getch();
+    return 0;
+    }

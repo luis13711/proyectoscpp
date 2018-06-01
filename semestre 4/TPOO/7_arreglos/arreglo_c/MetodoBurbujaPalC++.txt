@@ -1,0 +1,51 @@
+/*metodo de la burbuja ordena caracteres*/
+
+#include<stdio.h>
+
+#define max 20
+
+void main(){
+
+				int i, cambio, n=0;
+
+				char a[max], aux;
+
+				puts("ingrese la palabra");
+
+				gets(a);
+
+				for(i=0;a[i]!='\0';i++, n++);
+
+				printf("%d\n", n);
+
+				cambio=1;
+
+				while(cambio==1){
+
+									  cambio=0;
+
+									  for(i=0;i<n-1;i++)
+
+															  if(a[i]>a[i+1]){
+
+																					aux=a[i];
+
+																					a[i]=a[i+1];
+
+																					a[i+1]=aux;
+
+																					cambio=1;
+
+																					}
+
+									  }
+
+				puts("el arreglo quedo asi:");
+
+				for(i=0;i<n;i++)
+
+				                printf("%c\n", a[i]);
+
+
+
+				 }

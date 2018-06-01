@@ -1,0 +1,29 @@
+#include <cstdlib>
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main(){
+	double param, fractpart, intpart;
+  	param = 3.14159265;
+  	
+  	double A;
+  	double k;
+  	double m;
+  	double resultadoint,resultadofrac;
+ 	
+ 	cout<<"ingrese valor de A: "<<endl;
+ 	cin>>A;
+ 	cout<<"ingrese clave: "<<endl;
+ 	cin>>k;
+ 	cout<<"ingrese tamaño deñ arreglo"<<endl;
+ 	cin>>m;
+ 	
+ 	resultadofrac = modf (k*A, &resultadoint);
+ 	
+ 	cout<<"con el metodo multiplicar se guardara"<<endl;
+	cout<<"en el arreglo en la posicion: "<<int(resultadofrac*m)<<endl;
+	system("pause");
+	return 0; 
+	}

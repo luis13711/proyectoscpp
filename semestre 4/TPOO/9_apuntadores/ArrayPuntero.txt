@@ -1,0 +1,22 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+
+int main(){
+    int n=3,i;
+    
+    char c='1',d='x',e='y';
+    char* pc[3];
+
+    pc[0]=&c;
+    pc[1]=&d;
+    pc[2]=&e;
+
+    for(i=0;i<n;i++)
+        printf("%c\n", pc[i]);
+
+    
+    getch();
+    return 0;
+    
+    }

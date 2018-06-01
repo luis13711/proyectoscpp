@@ -1,0 +1,5 @@
+primero
+g++ archivo.cpp
+g++ archivo.cpp -o archivo
+./archivo
+te va a mostrar lo que quieres que muestre el main.cpp

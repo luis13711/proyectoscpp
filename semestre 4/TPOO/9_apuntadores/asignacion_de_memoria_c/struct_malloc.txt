@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<conio.h>
+
+using namespace std;
+
+typedef struct Gato{
+       
+       char raza;
+       int patas;
+       void Mostrar(){}
+       };
+
+int main(){
+
+    Gato *pgato1;
+    
+    printf("%d\n", sizeof(Gato));
+    
+    pgato1 = (Gato*)malloc(10*sizeof(Gato));
+
+    free(pgato1);
+    
+    getch();
+    return 0;
+    }

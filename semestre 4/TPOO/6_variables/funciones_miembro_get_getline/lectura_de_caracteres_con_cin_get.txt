@@ -1,0 +1,18 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+	char bufer[80];
+	
+	cout<<"introduzca 7 caracteres: ";
+	cin.get(bufer,8);//lee ocho caracteres del bufer
+ 	cout<<"[ "<<bufer<<" ]"<<endl;
+ 	cin.get(bufer,sizeof(bufer));
+ 	cout<<"[ "<<bufer<<" ]"<<endl;
+
+	system("PAUSE");
+    return 0;
+	}

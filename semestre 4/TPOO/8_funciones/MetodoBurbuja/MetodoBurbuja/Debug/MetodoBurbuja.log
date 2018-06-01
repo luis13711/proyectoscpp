@@ -1,0 +1,27 @@
+﻿Compilación iniciada a las 25/08/2012 09:08:37 p.m..
+     1>Proyecto "C:\Users\luis\documents\visual studio 2010\Projects\MetodoBurbuja\MetodoBurbuja\MetodoBurbuja.vcxproj" en el nodo 2 (build destinos).
+     1>InitializeBuildStatus:
+         Aplicando tarea Touch a "Debug\MetodoBurbuja.unsuccessfulbuild".
+       GenerateTargetFrameworkMonikerAttribute:
+       Se omitirá el destino "GenerateTargetFrameworkMonikerAttribute" porque todos los archivos de salida están actualizados respecto a los archivos de entrada.
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\allegro-5.0.7-msvc-10.0\include" /AI"C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt MetodoBurbuja.cpp /clr:nostdlib 
+         MetodoBurbuja.cpp
+         Todas las salidas están actualizadas.
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\allegro-5.0.7-msvc-10.0\include" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\luis\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
+         .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+       Link:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\luis\documents\visual studio 2010\Projects\MetodoBurbuja\Debug\MetodoBurbuja.exe" /INCREMENTAL /NOLOGO /MANIFEST /ManifestFile:"Debug\MetodoBurbuja.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\luis\documents\visual studio 2010\Projects\MetodoBurbuja\Debug\MetodoBurbuja.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\MetodoBurbuja.obj
+         Debug\PrincipalBurbuja.obj
+         "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+         MetodoBurbuja.vcxproj -> C:\Users\luis\documents\visual studio 2010\Projects\MetodoBurbuja\Debug\MetodoBurbuja.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\luis\documents\visual studio 2010\Projects\MetodoBurbuja\Debug\MetodoBurbuja.exe;#1" /manifest Debug\MetodoBurbuja.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Se eliminará el archivo "Debug\MetodoBurbuja.unsuccessfulbuild".
+         Aplicando tarea Touch a "Debug\MetodoBurbuja.lastbuildstate".
+     1>Compilación del proyecto terminada "C:\Users\luis\documents\visual studio 2010\Projects\MetodoBurbuja\MetodoBurbuja\MetodoBurbuja.vcxproj" (build destinos).
+
+Compilación correcta.
+
+Tiempo transcurrido 00:00:18.33

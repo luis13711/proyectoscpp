@@ -1,0 +1,49 @@
+/*metdo de la burbuja con funciones prototipo*/
+#include<iostream>
+#include<cstdlib> 
+#define max  20
+
+using namespace std;
+
+void burbuja(int x[max],int n);
+
+int main(){
+
+	int n, a[max];
+	
+	unsigned short int i,p;
+	
+	do{
+		for(p = 0;p<1;
+			cout<<"ingrese tamaño de arreglo unidimensional:"<<endl,
+				cin>>n,p++);
+		}while(n<2&&n>max);
+
+	for( i=0 ;i<n;cout<<"a["<<(i+1)<<"]= ",cin>>a[i++]);
+		
+	burbuja(a,n);
+
+	system("pause");
+	return 0;
+	}
+
+
+void burbuja(int x[max],int n){
+	
+	unsigned short int i = 0, cambio,p;
+
+	int aux;
+
+	for(cambio=1;cambio == 1;)
+		for(cambio = 0, i = 0; i<n-1 ; i++ )
+			for(p = 0;x[i]>x[i+1];aux=x[i],x[i]=x[i+1],
+				x[i+1]=aux,cambio++,p++);
+
+	for(cout<<"el arreglo quedo asi:"<<endl,
+		i=0;i<n;
+			cout<<x[i++]<<endl);
+		
+
+		
+
+	}

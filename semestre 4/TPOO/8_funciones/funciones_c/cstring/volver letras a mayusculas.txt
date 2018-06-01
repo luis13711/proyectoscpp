@@ -1,0 +1,25 @@
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <cstring>
+
+using namespace std;
+
+int main(){ 
+	char Drink[] = "100% Apple Juice";
+
+	char *SayItLoud;
+
+
+
+	cout << "What is that drink? " << Drink << endl;
+
+
+
+	SayItLoud = strupr(Drink);
+
+	cout << "Say it loud: " << SayItLoud << endl; 
+	
+	system("pause");
+	return 0; 
+	}

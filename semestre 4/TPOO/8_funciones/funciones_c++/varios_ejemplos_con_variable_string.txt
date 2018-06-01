@@ -1,0 +1,52 @@
+#include <iostream>
+
+using namespace std;
+
+bool is_palindrome(std::string const& s){
+  	//return std::equal(s.begin(), s.end(), s.rbegin());
+	return equal(s.begin(), s.end(), s.rbegin());
+	}
+
+int main(){
+
+	string palabra1="hola mundo";
+	string::iterator it,it1;
+	string::reverse_iterator it2;
+	
+	bool s;
+	
+	
+	string str ("Test string");
+  	cout << "size: " << str.size() << "\n";
+  	cout << "length: " << str.length() << "\n";
+  	cout << "capacity: " << str.capacity() << "\n";
+  	cout << "max_size: " << str.max_size() << "\n";
+	
+	
+	
+	it = palabra1.begin();
+	it++;
+	it1 = palabra1.end();
+	
+	it2 = palabra1.rbegin();
+	it2++;
+
+	s=std::equal(it,it1,it2);
+	
+	if(!s)
+		cout<<"falso"<<endl;
+	
+	cout<<endl<<*it2<<*it1<<*it<<endl;
+	
+	
+	cout<<"frase["<<1<<"]: ";
+
+	getline(cin,palabra1);
+
+	if(is_palindrome(palabra1))
+		cout<<"es palindrome"<<endl;
+	else
+		cout<<"la palabra no es palindrome"<<endl;
+	cin.get();
+	return 0;
+	}

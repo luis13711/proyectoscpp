@@ -1,0 +1,25 @@
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+#include <exception>
+using namespace std;
+
+int main() {
+	char nombre[20];
+	char apellido[30];
+	
+	cout<<"¿cual es su nombre?"<<endl;
+	cin>>nombre;
+	cout<<"¿cual es su apellido?"<<endl;
+	cin>>apellido;
+	
+	//enviar nombre y apellido a la impresora
+	
+	ofstream impresora("nombre.txt");
+	
+	impresora<<"su nombre completo es: \n";
+	impresora<<nombre<<"\t"<<apellido<<endl;
+	
+	cin.get();	
+    return 0;
+	}

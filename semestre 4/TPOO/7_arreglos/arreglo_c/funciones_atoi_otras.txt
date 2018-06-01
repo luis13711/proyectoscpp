@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<conio.h>
+#define max 5
+#define max1 15
+
+using namespace std;
+
+int main(){
+
+    char *c = "-19 332";
+    char **pc;
+    int n1;
+    unsigned int n2;
+    
+    pc =(char**)malloc(sizeof(char));
+    n1=strtol(c,pc,0);
+    printf("n1=%d\n",n1);
+    printf("cadena actual %s\n", *pc);
+    c=*pc;
+    n2=strtoul(c,pc,10);  
+    printf("n2 = %u", n2); 
+    getch();
+    return 0;
+    
+    }

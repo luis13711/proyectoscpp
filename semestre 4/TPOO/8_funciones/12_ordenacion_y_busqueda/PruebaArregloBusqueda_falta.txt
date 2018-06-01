@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+#include<conio.h>
+
+using namespace std;
+
+class ArregloLineal { 
+	int i;
+
+	int datos[];
+		
+	int tamanio1;
+    
+    public:
+    
+    	ArregloLineal(int tamanio){
+
+        	tamanio1 = tamanio;
+        	
+        	datos[tamanio];
+
+            srand(time(NULL));        	
+			//randomize();
+			for(i=0;i<tamanio;i++)
+				datos[i]=10+(1+rand()%(11));
+            	//datos[i]=random(10);
+				
+			}
+			
+		~ArregloLineal() {
+   			//delete[] i;
+   			delete[] datos;
+   			//delete[] tamanio1;
+			}
+			
+    	int busquedaLineal(int claveBusqueda){
+    
+        	int indice=0;
+
+        	for(indice=0;indice<tamanio1;indice++)
+            	if(datos[indice]==claveBusqueda)
+                	return indice; 
+        
+        	return -1;
+        
+        	}
+    
+    	char toString(){
+    
+        	char temporal;
+
+        	return 's';
+        
+        	}
+    
+    };
+    
+int main(){
+        
+        int enteroBusqueda=0;
+        
+        int posicion=0;
+        
+        ArregloLineal *parregloBusqueda;
+ 
+ 		parregloBusqueda = new ArregloLineal(10);
+ 
+		parregloBusqueda =(ArregloLineal*)malloc(sizeof(ArregloLineal));
+    	
+        printf("%s\n",parregloBusqueda->toString());
+
+        
+        printf("escriba un valor entero (-1 para terminar):");
+        scanf("%d",&enteroBusqueda); 
+ 
+        //while(enteroBusqueda !=-1){
+        
+            posicion = parregloBusqueda->busquedaLineal(enteroBusqueda);
+            
+            if(posicion==-1)
+                printf("el entero %d no se encontro.\n",enteroBusqueda);   
+          
+            else
+                printf("el entero %d se encontro en la posicion %d",enteroBusqueda,posicion);
+
+            
+            printf("escriba un valor entero (-1 para terminar):");
+            scanf("%d",&enteroBusqueda);              
+            
+            //}
+        free(parregloBusqueda);   
+        getch();
+        return 0;
+       }
+  
+

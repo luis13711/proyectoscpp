@@ -1,0 +1,29 @@
+#include <iostream>
+#include <cstdlib>
+#include <cmath>	 //Reconoce la raíz mediante la función "sqrt"
+
+using namespace std;
+
+int main(){
+
+	float a,b,c;	 /*Se define el tipo de dato_entrada*/
+
+	float p,at;	 /*Se define el tipo de dato_salida*/
+
+	cout<<"Ingrese el valor del lado a: "<<endl;
+	cin>>a;
+
+	cout<<"Ingrese el valor del lado b: "<<endl;
+	cin>>b;
+
+	cout<<"Ingrese el valor del lado c: "<<endl;
+	cin>>c;
+
+	p = (a+b+c)/2.0;
+
+	at = sqrt(p*(p-a)*(p-b)*(p-c));
+
+	cout<<at<<endl;
+
+	system("pause");
+	}

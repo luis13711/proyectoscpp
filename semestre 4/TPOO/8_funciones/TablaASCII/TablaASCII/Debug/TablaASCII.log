@@ -1,0 +1,24 @@
+﻿Compilación iniciada a las 07/09/2012 10:57:37 a.m..
+     1>Proyecto "C:\Users\luis\documents\visual studio 2010\Projects\TablaASCII\TablaASCII\TablaASCII.vcxproj" en el nodo 2 (build destinos).
+     1>InitializeBuildStatus:
+         Aplicando tarea Touch a "Debug\TablaASCII.unsuccessfulbuild".
+       GenerateTargetFrameworkMonikerAttribute:
+       Se omitirá el destino "GenerateTargetFrameworkMonikerAttribute" porque todos los archivos de salida están actualizados respecto a los archivos de entrada.
+       ClCompile:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt main.cpp /clr:nostdlib 
+         main.cpp
+         Todas las salidas están actualizadas.
+       Link:
+         c:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\luis\documents\visual studio 2010\Projects\TablaASCII\Debug\TablaASCII.exe" /INCREMENTAL /NOLOGO /MANIFEST /ManifestFile:"Debug\TablaASCII.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\luis\documents\visual studio 2010\Projects\TablaASCII\Debug\TablaASCII.pdb" /ASSEMBLYDEBUG /TLBID:1 /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\main.obj
+         "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+         TablaASCII.vcxproj -> C:\Users\luis\documents\visual studio 2010\Projects\TablaASCII\Debug\TablaASCII.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\luis\documents\visual studio 2010\Projects\TablaASCII\Debug\TablaASCII.exe;#1" /manifest Debug\TablaASCII.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Se eliminará el archivo "Debug\TablaASCII.unsuccessfulbuild".
+         Aplicando tarea Touch a "Debug\TablaASCII.lastbuildstate".
+     1>Compilación del proyecto terminada "C:\Users\luis\documents\visual studio 2010\Projects\TablaASCII\TablaASCII\TablaASCII.vcxproj" (build destinos).
+
+Compilación correcta.
+
+Tiempo transcurrido 00:00:03.71

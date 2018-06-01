@@ -1,0 +1,15 @@
+union IF{
+	int x[20];
+	float y[20];
+	};
+
+IF muestra(){
+	
+	IF if1;
+	
+	if1.x[0]=20;
+	if1.y[0]=10;
+	
+	return if1;
+	
+	}

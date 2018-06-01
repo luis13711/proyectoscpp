@@ -1,0 +1,20 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<conio.h>
+
+using namespace std;
+
+
+int main(){
+
+    int *ad;
+    ad =(int*)malloc(sizeof(int));
+    char *adc;
+    adc= (char*)malloc(100*sizeof(char));
+    free(ad);
+    free(adc);
+
+    getch();
+    return 0;
+    }

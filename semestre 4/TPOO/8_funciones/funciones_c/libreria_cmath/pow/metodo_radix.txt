@@ -1,0 +1,27 @@
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
+
+using namespace std;
+
+double metodoRadix(string a){
+	double s=0,n=0;
+	
+	for(int i = a.length()-1;i>=0;i--)
+		n = n + ((int)a[i])*pow(128,s++);
+	
+	return n;
+	
+	}
+
+int main(){
+	
+	cout<<"valor de hola es "<<metodoRadix("hola")<<endl;
+	
+	system("pause");
+
+	return 0;
+	}
+
+
+

@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
+#include <string>
+
+using namespace std;
+
+//char(48) es 0
+
+string metodoDatos(string a,int i);
+
+int main(){
+	
+	string a="texto";
+	
+	char s='A';
+	
+	cout<<char(2.3)<<endl;
+	cout<<int(s)<<endl;
+	
+	//numeros
+	
+	for(int i=0;i<10;i++)
+		cout<<metodoDatos(a,i)<<endl;
+		
+	system("pause");
+
+	return 0;
+	}
+
+string metodoDatos(string a,int i){
+	if(i>=0&&i<10)
+		return a+char(48+i);
+	else if(i>-10&&i<0){
+		i = (-1)*i;
+		return a+char(48+'-'+i);
+		}
+	//else{}
+	return a;
+	}
+

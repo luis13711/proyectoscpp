@@ -1,0 +1,16 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+	char nombre[40];
+	cout<<"ingrese nombre y apellido"<<endl;
+	cin.getline(nombre,40);
+	cout<<nombre<<endl;
+
+
+	system("PAUSE");
+    return 0;
+	}

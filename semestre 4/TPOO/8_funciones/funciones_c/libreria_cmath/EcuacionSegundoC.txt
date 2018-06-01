@@ -1,0 +1,39 @@
+//programa que calcule la ecuacion de segundo grado
+
+#include<stdio.h>
+
+#include<conio.h>
+
+#include<math.h>
+
+float a, b, c, x1, x2;
+
+int main(){
+
+    puts ("ax2 + bx + c = 0");
+
+    puts ("x=(-b(+)/(-)(b2-4*a*c))/2a");
+
+    puts ("ingrese valor de a:");
+
+    scanf("%f",&a);
+
+    puts ("ingrese valor de b:");
+
+    scanf("%f", &b);
+
+    puts("ingrese valores de c:");
+
+    scanf("%f", &c);
+
+    x1 = (-b+sqrt(b*b-4*a*c))/2.0*a;
+
+    x2 = (-b+sqrt(b*b-4*a*c))/2.0*a;
+
+    printf("\nx=%f\nx=%f", x1, x2);
+    
+    getch();
+    
+    return 0;
+
+    }

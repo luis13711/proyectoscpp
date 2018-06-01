@@ -1,0 +1,33 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+	char nombre[40],calle[40],ciudad[40],provincia[40];
+	char codigoPostal[40],telefono[40];
+	
+	cout<<"ingrese nombre"<<endl;
+	cin.getline(nombre,40);
+	cout<<"ingrese calle"<<endl;
+	cin.getline(calle,40);
+	cout<<"ingrese ciudad"<<endl;
+	cin.getline(ciudad,40);
+	cout<<"ingrese provincia"<<endl;
+	cin.getline(provincia,40);
+	cout<<"ingrese codigo postal"<<endl;
+	cin.getline(codigoPostal,40);
+	cout<<"ingrese telefono"<<endl;
+	cin.getline(telefono,40);
+
+	cout<<"nombre :"<<nombre<<endl;
+	cout<<"calle :"<<calle<<endl;
+	cout<<"ciudad :"<<ciudad<<endl;
+	cout<<"provincia: "<<provincia<<endl;
+	cout<<"codigo postal: "<<codigoPostal<<endl;
+	cout<<"telefono: "<<telefono<<endl;
+
+	system("PAUSE");
+    return 0;
+	}

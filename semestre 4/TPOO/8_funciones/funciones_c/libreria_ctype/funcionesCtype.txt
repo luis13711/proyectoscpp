@@ -1,0 +1,51 @@
+#include<ctype.h>
+#include<conio.h>
+
+using namespace std;
+
+int isalnum(int c);//letra o digito
+//letra o digito del 0 al 9 devuelve verdadero
+
+int isalpha(int c);//letra mayuscula o minuscula 
+//comprueba que se teclee una letra
+
+int iscntrl(int c);//caracter de control
+// si c es un caracter de control ASCII
+
+int isdigit(int c);//digito decimal(0-9)
+//comprueba si c es un digito del 0 al 9 
+
+int isgraph(int c);//caracter imprimible, excepto espacio
+//verdadero si c es un caracter imprimible(no de control)
+
+int islower(int c);//letra minuscula (a-z)
+//verdadero si es una minuscula
+
+int isprint(int c);//caracter imprimible, incluyendo espacio
+//verdadero si es caracter de ASCII
+
+int ispunct(int c);//caracter imprimible distinto de digito, 
+//letra y de espacio
+//verdadero si c es caracter de puntuacion
+
+int isspace(int c);//espacio, avance de pagina, nueva linea, 
+//retorno de carro, tabulacion, tabulacion vertical
+//verdadero si c es un espacio
+
+int isupper(int c);//letra amyuscula
+//verdadero si es una mayuscula
+
+int isxdigit(int c);//digito hexadecimal
+//devuelve verdadero si esta en ASCII
+
+int tolower(int c);//devuelve la letra minuscula de c
+//convierte caracter c a minuscula
+
+int toupper(int c);//devuelve la letra mayuscula de c
+//convierte un caracter c a mayuscula
+
+int main(){
+    
+    getch();
+    return 0;
+    }

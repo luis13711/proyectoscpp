@@ -1,0 +1,21 @@
+﻿Compilación iniciada a las 14/10/2012 02:15:17 p.m..
+     1>Proyecto "C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\VariablesApuntador\VariablesApuntador.vcxproj" en el nodo 2 (build destinos).
+     1>InitializeBuildStatus:
+         Se creará "Debug\VariablesApuntador.unsuccessfulbuild" porque se especificó "AlwaysCreate".
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\Debug\VariablesApuntador.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\VariablesApuntador.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\Debug\VariablesApuntador.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\Debug\VariablesApuntador.lib" /MACHINE:X86 Debug\main.obj
+         LINK : no se encontró C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\Debug\VariablesApuntador.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
+         VariablesApuntador.vcxproj -> C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\Debug\VariablesApuntador.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\Debug\VariablesApuntador.exe;#1" /manifest Debug\VariablesApuntador.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Se eliminará el archivo "Debug\VariablesApuntador.unsuccessfulbuild".
+         Aplicando tarea Touch a "Debug\VariablesApuntador.lastbuildstate".
+     1>Compilación del proyecto terminada "C:\Users\Luis Alberto\documents\visual studio 2010\Projects\VariablesApuntador\VariablesApuntador\VariablesApuntador.vcxproj" (build destinos).
+
+Compilación correcta.
+
+Tiempo transcurrido 00:00:01.19

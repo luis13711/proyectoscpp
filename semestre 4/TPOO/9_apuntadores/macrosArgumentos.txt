@@ -1,0 +1,32 @@
+#include<stdio.h>
+#include<conio.h>
+#define MEDIA(x,y,z)((x)+(y)+(z))/3.0
+#define FUNCION(x) (((x)<-1.0))                         
+
+float s=2.0f;
+double a=2.9;
+using namespace std;
+volatile int fs=20;
+
+
+extern void pruebaVoid(long int x);
+
+int main(){
+    
+    printf("%lf\n", MEDIA(a,4.5,7));
+    printf("%lf\n", FUNCION(a));
+    pruebaVoid(20);    
+    getch();
+    
+    return 0;
+    
+    }
+
+void pruebaVoid(long int x){
+    auto int fs;
+    static char s='a';
+    register int indice;
+    
+    printf("%ld", x);
+    
+    }

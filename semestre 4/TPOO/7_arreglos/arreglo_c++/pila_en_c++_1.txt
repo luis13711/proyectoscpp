@@ -1,0 +1,101 @@
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+int A[50];
+char palabra[100];
+int n;
+int i=0;
+int novalido=0;
+int valido=0;
+int aux=0;
+
+void muestrapila(){ 
+    for(int j=n-1;j>=0;j--)
+		printf("%s %d: %d\n","A",j,A[j]);		 		
+	}
+
+void crearpila(int n){
+	
+	A[n];
+ 	for(int j=0;j<n;j++)
+		A[j]=0; 		  	  
+	}
+
+bool pilavacia(){
+	bool W=true;
+  	for(int j=n-1;j>=0;j--)	
+		if(A[j]!=0)
+	    	W=false; 
+  return W;
+}
+
+int main(){ 
+    printf("\n\n\n\t * %s\n\t   %s\n\n",
+	"Automata Finito-Cuyo lenguaje acepta el mismo numero",
+	"de ceros y unos");
+    puts("Ingrese palabra : ");
+    gets(palabra);                    
+    n=strlen(palabra);
+	crearpila(n);    
+	while(i<n){
+		if(palabra[i]!='0' && palabra[i]!='1' && palabra[i]!=' ')  /*caracter no valido*/
+         {
+        	novalido=1;
+           	break;               
+         }
+		else{	
+			if(palabra[0]==' ') /* W valida si se ingresa lambda*/
+			 { 
+				valido=1;
+			   	break;	
+	         }
+	        if(palabra[0]=='1')/* W no valida si comienza con 1*/
+	         {
+			   novalido=1;
+			   break; 					
+		     }
+		    if(n%2!=0)
+		     {
+			  	novalido=1;
+				break;  	   
+  		     }
+  		    else
+  		     {
+				if(palabra[i]=='0')  /*si palabra comienza con 0 , empilar x*/
+          		{    	 
+   	            	A[aux]=14; 
+					aux++;
+          		}
+				if(palabra[i]=='1') /*descempila*/ 	 	
+				{
+					aux--;
+                    A[aux]=0;				 					
+			    }		   
+		     }  			 			    	  
+		 }   	 	                         
+          i++; 	      
+       	}
+    puts("\n\n");
+	muestrapila();
+	if(novalido==1){
+		puts("\n\t * Palabra Rechazada\n");
+		}
+	else{
+		if(pilavacia()){
+			puts("\n\t * Palabra Aceptada\n");
+			}
+		else {
+			puts("\n\t * Palabra Rechazada\n");
+			}	  	
+   	   }
+	   if(valido==1){
+			puts("\n\t * Palabra Aceptada\n");
+			}
+	puts("\n\n");
+    system("PAUSE");
+    return 0;
+    
+	}

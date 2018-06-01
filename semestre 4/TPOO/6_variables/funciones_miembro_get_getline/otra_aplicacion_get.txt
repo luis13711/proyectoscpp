@@ -1,0 +1,16 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+	char a,b,c;
+	
+	cout<<"introduzca tres letras:";
+	cin.get(a).get(b).get(c);
+	system("cls");
+	cout<<"a: "<<a<<"\nb: "<<b<<"\nc: "<<c<<endl;
+	system("PAUSE");
+    return 0;
+	}

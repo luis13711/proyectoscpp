@@ -1,0 +1,17 @@
+31. Ejercicio:
+Desarrolle una clase en Java que realice la abstracción de un sistema planetario,debiendo tener en cuenta 
+para cada cuerpo del sistema aspectos como: masa,densidad, diámetro, distancia al sol (suponga órbitas 
+circulares), un número deidentificador único y un nombre textual. Incluya métodos que calculen la 
+atracción gravitatoria entre dos cuerpos cualesquiera del sistema.
+32. Ejercicio:
+¿Es posible ejecutar un programa en java que contenga varias clases con métodosmain? En caso positivo, 
+¿cómo se determina el punto de entrada a un programa?
+33. Ejercicio:
+Escriba un programa en java que genere aleatoriamente (Ayuda: Vea la clase Math para saber cómo generar 
+números aleatorios en java) un array de números reales, ylo ordene mediante el algoritmo de la burbuja o 
+mediante quicksort (esto deberá poder elegirlo el usuario).
+34. Ejercicio:
+Se quiere implementar el control de un Ferry. Para ello cree una clase Vehículo.Incluya aspectos comunes a 
+todos los vehículos como número de pasajeros, presencia o ausencia de tripulación, número de ruedas, fecha
+de matriculación,medio por el que se desplaza, etc. Incluya los métodos que considere oportunos.Realice un 
+programa capaz de leer por teclado los datos de 10 vehículos y los liste acontinuación por pantalla.

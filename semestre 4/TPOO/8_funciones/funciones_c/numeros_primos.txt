@@ -1,0 +1,27 @@
+/* modf example */
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int main() { 
+    unsigned int num, n, p, num_columnas;       
+    cout << "Introduzca la cantidad de numeros primos que quiere obtener: "; 
+    cin >> num; 
+    cout << '\n' << endl; 
+    num_columnas = 0 ;     
+    n = 2; 
+    while(n <= num){ 
+        for(p = 2; n % p!= 0; p++); 
+        if (p == n)  {  
+            cout << n <<", "; 
+            if(++num_columnas % 10 == 0) 
+                cout << "\n" << endl; 
+        	} 
+        n++; 
+    	} 
+    cout << "\n" << endl; 
+    system("pause");
+    return 0;
+	}  
+

@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstdlib>
+
+using namespace std;
+
+
+
+
+int main() { 
+	char cadena[128];
+	string linea
+	ifstream fichero;
+	fichero.open("names.txt");
+		if(fichero.is_open()){
+			getline(fichero,linea);//saltar encabezado
+			getline(fichero,linea);
+			
+			while(!fichero.eof()){
+				cout<<"la linea es:"<<linea<<"'"<<endl;
+				getline(fichero,linea);
+				}
+			}
+		else
+			puts("no se pudo abrir el fichero");
+
+	system("PAUSE");
+    return 0;
+	}

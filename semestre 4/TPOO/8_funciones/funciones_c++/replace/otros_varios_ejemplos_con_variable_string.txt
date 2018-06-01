@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+	string base="this is a test string.";
+  	string str2="n example";
+  	string str3="sample phrase";
+  	string str=base;                
+
+	cout<<str<<endl;
+
+  	str.replace(9,5,str2); //te dice desde donde remplazar 
+	  
+	  //segundo dice cuantos simbolos desaparecer
+	  //trecero palabra a introducir ahí
+
+	cout<<"ejemplo con tres parametros"<<endl<<str<<endl;
+	
+  	str.replace(19,6,str3,7,6);     // "this is an example phrase."
+  
+  	cout<<"ejemplo con cinco parametros"<<endl<<str<<endl;
+  
+  	str.replace(8,10,"just all",6); // "this is just a phrase."
+  	
+  	cout<<"ejemplo con cuatro parametros"<<endl<<str<<endl;
+  	
+  	str.replace(8,6,"a short");     // "coloca string desde la posicion 8 a short phrase."
+  	
+  	cout<<"ejemplo con cuatro parametros"<<endl<<str<<endl;
+	  
+	str.replace(22,1,3,'!');        // "coloca al final tres veces este simbolo !"
+                              
+  	cout<<"ejemplo con cuatro parametros"<<endl<<str<<endl;
+  	
+  	cin.get();
+  	return 0;
+	}

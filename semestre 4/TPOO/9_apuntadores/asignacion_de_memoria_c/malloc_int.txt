@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+
+using namespace std;
+
+
+int main(){
+    float pi = 3.14159;
+
+    void *p1 = NULL; //puntero generico
+    //int *p1=3;
+    printf("%d\n",sizeof(int));
+    
+    p1 = malloc(sizeof(int));
+
+    int *p1_convertido = (int *)p1;
+
+    *p1_convertido = 3;
+    
+    printf("p1 convertido %d\n", *p1_convertido);
+    
+    free(p1_convertido);
+
+    getch();
+    return 0;
+    }

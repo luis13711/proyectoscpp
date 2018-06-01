@@ -1,0 +1,17 @@
+/* modf example */
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+
+using namespace std;
+
+int main (){
+  	double param, fractpart, intpart;
+
+  	param = 3.14159265;
+  	fractpart = modf (param , &intpart);
+ 	cout<<param<<" = "<<intpart<<" + "<<fractpart<<endl;
+	
+	system("pause");
+	return 0;
+	}

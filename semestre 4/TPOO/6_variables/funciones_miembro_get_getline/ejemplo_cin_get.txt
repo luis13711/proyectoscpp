@@ -1,0 +1,13 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main() {
+	char c;
+	while((c=cin.get())!=EOF){
+		cout<<"c: "<<c<<endl;
+		}
+	cout<<"\n terminado";	
+    return 0;
+	}

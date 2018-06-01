@@ -1,0 +1,23 @@
+#include <iostream>
+
+using namespace std;
+
+bool is_palindrome(std::string const& s){
+  	return std::equal(s.begin(), s.end(), s.rbegin());
+	}
+
+int main(){
+
+	string palabra1;
+	
+	cout<<"frase["<<1<<"]: ";
+
+	getline(cin,palabra1);
+
+	if(is_palindrome(palabra1))
+		cout<<"es palindrome"<<endl;
+	else
+		cout<<"la palabra no es palindrome"<<endl;
+	cin.get();
+	return 0;
+	}

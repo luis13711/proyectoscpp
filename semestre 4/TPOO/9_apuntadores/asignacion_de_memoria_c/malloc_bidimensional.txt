@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<conio.h>
+#define max 5
+
+using namespace std;
+
+int main(){
+
+    double **mat,*mat1;
+    int n,m,i;
+    
+    mat = (double**)malloc(max*sizeof(double*));
+    
+    mat1 =(double*)malloc(max*sizeof(double));
+    
+    for(i=0;i<max;i++)
+        mat[i]=mat1;
+    //for(i=0;i<max;i++)
+    //    mat[i]=(double)malloc(max*sizeof(double));
+        free(mat1);
+    for(i=0;i<max;i++)
+        free(mat[i]);
+    getch();
+    return 0;
+    }

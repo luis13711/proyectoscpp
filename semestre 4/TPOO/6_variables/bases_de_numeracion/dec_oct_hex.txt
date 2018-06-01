@@ -1,0 +1,15 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+
+	cout<<"valor de "<<40<<" en hexadecimal es "<<hex<<40<<endl;
+	cout<<"valor de "<<40<<" en decimal es "<<dec<<40<<endl;
+	cout<<"valor de "<<40<<" en octal es "<<oct<<40<<endl;
+
+	system("PAUSE");
+    return 0;
+	}

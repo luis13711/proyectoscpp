@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<conio.h>
+
+using namespace std;
+
+
+int main(){
+
+    char cad[121],*ptr;
+    int lon;
+    
+    puts("introducir una linea de texto:");
+    gets(cad);
+    lon = strlen(cad);
+    ptr =(char*)malloc((lon+1)*sizeof(char));
+    strcpy(ptr, cad);
+    printf("ptr = %s", ptr);
+    
+    free(ptr); //libera la memoria de ptr
+
+    getch();
+    return 0;
+    }

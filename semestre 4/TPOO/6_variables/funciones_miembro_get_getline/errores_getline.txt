@@ -1,0 +1,19 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+	char nombre[40];
+	int edad;
+	
+	cout<<"introduzca edad: "<<endl;
+	cin>>edad;
+	cout<<endl<<edad<<endl;
+	cout<<"introduzca el nombre: "<<endl;
+	cin.getline(nombre,40);
+	cout<<endl<<nombre<<endl;
+	system("PAUSE");
+    return 0;
+	}

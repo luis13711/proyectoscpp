@@ -1,0 +1,20 @@
+#include<stdio.h>
+#include<iostream.h>
+#include<conio.h>
+#include<string.h>
+#include<stdlib.h>
+
+int main(){
+
+    int num,c;
+    srand(time(NULL));
+    num=1+rand()%(11);
+    cout<<num<<" ";
+ 
+
+    getch();
+
+    return 0;
+
+    }
+

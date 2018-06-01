@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VariablesApuntador", "VariablesApuntador\VariablesApuntador.vcxproj", "{82A15163-7237-4F01-8BA3-6BF78B72E3FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82A15163-7237-4F01-8BA3-6BF78B72E3FE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82A15163-7237-4F01-8BA3-6BF78B72E3FE}.Debug|Win32.Build.0 = Debug|Win32
+		{82A15163-7237-4F01-8BA3-6BF78B72E3FE}.Release|Win32.ActiveCfg = Release|Win32
+		{82A15163-7237-4F01-8BA3-6BF78B72E3FE}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

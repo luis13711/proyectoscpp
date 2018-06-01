@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstdlib>
+#include <time.h>
+
+using namespace std;
+
+int main(){
+	int first_die, sec_die;
+	time_t seconds;
+
+	time(&seconds);
+	srand((unsigned int) seconds);
+
+	cout<<seconds<<endl;
+
+	//modulo 6 dara valores numericos del 0 al 5
+	first_die = rand() % (6) + 1;
+	sec_die = rand() % (6) + 1;
+
+	cout<< "Your roll is (" << first_die << ", "
+		<< sec_die << "}" << endl << endl;
+
+	//modulo 6 dara valores numericos del 0 al 5
+	first_die = rand() % (6) + 1;
+	sec_die = rand() % (6) + 1;
+
+	cout<< "My roll is (" << first_die << ", "
+		<< sec_die << "}" << endl << endl;
+		
+	system("pause");
+	return 0;
+	}

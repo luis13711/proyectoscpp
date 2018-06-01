@@ -1,0 +1,34 @@
+#include <cstdlib>
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+
+	const int max=50;
+
+	char palabra1[max],palabra2[max],a;
+
+	unsigned int i=0,k,j,cont=0;
+
+	cout<<"frase["<<(i+1)<<"]: ";
+
+	gets(palabra1);
+
+	k=strlen(palabra1);//te da el tamaño de la palabra 
+	j=k;
+	cout<<"palabra tiene un tamaño de "<<k<<endl;
+
+	for(i=0;i<k;i++)
+		palabra2[--j]=palabra1[i];
+
+
+	if(stricmp(palabra2,palabra1))//se compara el primero con el ultimo
+		cout<<"es palindrome"<<endl;
+	else
+		cout<<"la palabra no es palindrome"<<endl;
+	system("PAUSE");
+	return 0;
+	}

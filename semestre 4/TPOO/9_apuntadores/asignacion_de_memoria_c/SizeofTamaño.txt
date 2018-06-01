@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+
+struct Persona{
+    
+    char nombre[30];
+    int edad;
+    float altura;
+    float peso;
+    
+    };
+
+int main(){
+    struct Persona mar;
+    
+    printf("Sizeof(Persona): %d\n", sizeof(mar));
+    
+    strcpy(mar.nombre,"luis");
+    mar.edad=21;
+    
+    getch();
+    return 0;
+    
+    }

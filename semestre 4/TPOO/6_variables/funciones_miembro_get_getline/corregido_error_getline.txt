@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+using namespace std;
+
+int main(){
+	
+	char auxiliar[2];
+	char nombre[30];
+	int edad;
+	cout<<"introduzca edad"<<endl;
+	cin>>edad;
+	cout<<edad<<endl;
+	cin.getline(auxiliar,2);//limpia el bufer
+	cout<<"introduzca el nombre"<<endl;
+	cin.getline(nombre,30);
+	cout<<nombre<<endl;
+	system("PAUSE");
+    return 0;
+	}

@@ -1,0 +1,37 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+
+struct Estudiante{
+    
+    char nombre[41];
+    int num_Estudiante;
+    float anio_de_matricula;
+    float nota;
+    
+    };
+
+int main(){
+    
+    struct Estudiante mejor;
+    struct Estudiante* ptr_est;
+    ptr_est=&mejor; 
+    
+    char c='z';
+    char* pc=&c;
+    char** ppc=&pc;
+    char*** pppc=&ppc;
+    //***pppc='m';
+    
+    strcpy(ptr_est->nombre,"luis");
+    ptr_est->num_Estudiante=3425;
+    ptr_est->nota=8.5;
+    printf("%c\n", c);
+    printf("%c\n", pc);
+    printf("%c\n", ppc);
+    printf("%c\n", pppc);
+    
+    getch();
+    return 0;
+    
+    }

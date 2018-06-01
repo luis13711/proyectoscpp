@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<conio.h>
+
+using namespace std;
+
+void printMensaje (float dato);
+void printNumero (float dato);
+void (*funcPuntero)(float);
+
+int main(){
+    float pi = 3.14159;
+    printMensaje(pi);
+    funcPuntero = printMensaje;
+    funcPuntero (pi);
+    funcPuntero = printNumero;
+    funcPuntero (pi);
+    printNumero(pi);
+    getch();
+    }
+
+void printMensaje(float dato){
+    printf(" Esta es la funcion printMensaje\n");
+    }
+
+void printNumero(float dato){
+    printf(" Este es el dato: %f\n", dato );
+    }

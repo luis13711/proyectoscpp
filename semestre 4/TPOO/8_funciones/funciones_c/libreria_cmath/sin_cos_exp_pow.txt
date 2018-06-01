@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cstdlib>
+#include <cmath>	 //Reconoce exp(X), se refiere a "e a la X"
+
+using namespace std;
+
+int main(){
+	float t;
+	double x,y,z;
+
+    cout<<"Ingrese el valor de t: "<<endl;
+	cin>>t;
+
+	x = pow(t,3)-8*t+4;
+	y = sin(t)+cos(2*t);
+	z = exp(3*t+7);
+
+	cout<<"El valor de t a la "<<3<<" es: "<<pow(t,3)<<endl;
+
+	cout<<"El valor de x es: "<<x<<endl;
+
+	cout<<"El valor de y es: "<<y<<endl;
+
+	cout<<"EL valor de z es: "<<z<<endl;
+
+	system("pause");
+	return 0;
+	}
