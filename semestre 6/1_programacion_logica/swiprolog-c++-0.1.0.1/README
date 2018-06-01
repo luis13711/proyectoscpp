@@ -1,0 +1,70 @@
+
+                   SwiProlog C++ - Prolog/C++ interface
+                                2002-01-14
+
+
+This is version 0.1.0 of the SwiProlog-C++ library for interfacing
+between SWI-Prolog and C++. See manual.html for details.
+
+
+Installation
+------------
+
+There is no automatic installation script, but installing is easy. 
+
+1. unpack the package somewhere
+
+2. The actual interface consists of the files prolog.cpp, prolog.hpp and
+manual.html. Place these files anywhere you like, on your machine. I
+suggest to compile prolog.cpp along with the other sources of your project.
+
+The other source files form a program for testing SwiProlog-C++. They can
+also be used as examples.
+
+The following places would be compliant to the Filesystem Hierarchy Standard.
+
+/usr/local/include/prolog.hpp
+/usr/local/share/swiprolog-c++/prolog.cpp
+/usr/local/share/doc/swiprolog-c++/manual.{xml,html}
+
+3. The HTML version of the manual is included. If you want to rebuild the
+manual from the XML sources, you need a working Docbook-XML installation.
+Change the paths in db.xsl and in Makefile. If you are using a different
+XSLT processor than xsltproc, you also need to adapt the call in the
+manual.html make target.
+
+
+Homepage
+--------
+
+http://www.volker-wysk.de/swiprolog-c++
+
+
+Contact
+-------
+
+Please send any bug reports, comments or suggestions to post@volker-wysk.de.
+
+
+Author
+------
+
+Volker Wysk <post@volker-wysk.de>
+
+
+Copyright
+---------
+
+This library is free software. You can redistribute it and/or modify it
+under the terms of the GNU Library General Public License as published by
+the Free Software Foundation, either version 2 of the License, or (at your
+option) any later version.
+
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more
+details.
+
+You should have received a copy of the GNU Library General Public License
+along with this library; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA 02111-1307 USA.

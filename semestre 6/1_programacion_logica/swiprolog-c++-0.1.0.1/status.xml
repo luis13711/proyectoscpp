@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+  <section>
+    <title>Status</title>
+
+    <para>SwiProlog-C++ isn't finished yet. It is in a proceded state, and
+      as far as it goes, is tested and mostly documented. It also should be
+      quite mature and usable, since a lot of thought and reconsideration
+      has gone into it. However, some things remain to be done. And it
+      hasn't been in much usage yet.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Null bytes in atoms and Prolog strings aren't considered.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>The <literal>main()</literal> function must be in the C++
+          part of the program.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>Converting terms to strings should be done in such a way,
+          that the strings are valid Prolog expressions (like
+          <literal>write(..., [quoted(true)])</literal>).
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>Exceptions should conform to the ISO standard.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>The documentation of how to write foreign predicates has not
+          yet been written. See the test program for some examples.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>

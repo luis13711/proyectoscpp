@@ -1,0 +1,2530 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"/usr/share/sgml/docbook/dtd/xml/4.1.2/docbookx.dtd" [
+
+<!ENTITY version           "0.1.0">
+<!ENTITY date              "2002-01-14">
+
+<!ENTITY status            SYSTEM "status.xml">
+<!ENTITY requirements      SYSTEM "requirements.xml">
+
+<!ENTITY fli               "Foreign Language Interface">
+<!ENTITY srm               "SWI-Prolog Reference Manual">
+<!ENTITY swipcpp           "SwiProlog-C++">
+<!ENTITY termt             "<type>term_t</type>">
+<!ENTITY atom              "<classname>Atom</classname>">
+<!ENTITY frame             "<classname>Frame</classname>">
+<!ENTITY functor           "<classname>Functor</classname>">
+<!ENTITY module            "<classname>Module</classname>">
+<!ENTITY predicate         "<classname>Predicate</classname>">
+<!ENTITY query             "<classname>Query</classname>">
+<!ENTITY recordedterm      "<classname>RecordedTerm</classname>">
+<!ENTITY staticatom        "<classname>StaticAtom</classname>">
+<!ENTITY staticfunctor     "<classname>StaticFunctor</classname>">
+<!ENTITY staticpredicate   "<classname>StaticPredicate</classname>">
+<!ENTITY staticquery       "<classname>StaticQuery</classname>">
+<!ENTITY staticterm        "<classname>StaticTerm</classname>">
+<!ENTITY conversionerror   "<classname>ConversionError</classname>">
+<!ENTITY cvterror          "<classname>CvtError</classname>">
+<!ENTITY formaterror       "<classname>FormatError</classname>">
+<!ENTITY logicerror        "<classname>LogicError</classname>">
+<!ENTITY parseerror        "<classname>ParseError</classname>">
+<!ENTITY prologexception   "<classname>PrologException</classname>">
+<!ENTITY unsafeprologexception   "<classname>UnsafePrologException</classname>">
+<!ENTITY generalerror      "<classname>GeneralError</classname>">
+<!ENTITY term              "<classname>Term</classname>">
+<!ENTITY termtype          "<type>TermType</type>">
+<!ENTITY foreignpredicate  "<classname>ForeignPredicate</classname>">
+<!ENTITY conceptec         "<link linkend='conceptec'>Equality Comparable</link>">
+<!ENTITY conceptltc        "<link linkend='conceptltc'>Less Than Comparable</link>">
+<!ENTITY concepta          "<link linkend='concepta'>Assignable</link>">
+<!ENTITY conceptdc         "<link linkend='conceptdc'>Default Constructible</link>">
+]>
+<book lang="en">
+
+  <bookinfo>
+    <title>Manual for &swipcpp; &version;</title>
+    <edition>Manual for version &version; of the Prolog/C++ interface &swipcpp;</edition>
+    <pubdate>&date;</pubdate>
+    <author>
+      <firstname>Volker</firstname>
+      <surname>Wysk</surname>
+    </author>
+  </bookinfo>
+
+  <chapter id="intro">
+    <title>Introduction</title>
+
+    <para>&swipcpp; is a wrapper around the SWI-Prolog Foreign
+      Language Interface. It allows you to write parts of a program in
+      Prolog, and other parts in C++. You can either embed the SWI-Prolog
+      engine in a C++ application, using it as a logic component, or use
+      C++ to define foreign predicates (or both).
+    </para>
+
+    <para>&swipcpp; aims at a smooth integration of the SWI-Prolog
+      constructs in the C++ environment. It makes use of advanced C++
+      features, such as templates, namespaces and STL integration. It tries
+      to shield the user from hard to understand memory management and
+      other issues of the SWI-Prolog implementation.
+      Using &swipcpp; should be much easier than using the &fli;.
+    </para>
+
+    &status;
+    &requirements;
+  </chapter>
+
+  <chapter id="userguide">
+    <title>User Guide</title>
+
+    <para>This section describes how to use &swipcpp; and provides
+        examples. The full details are covered in <xref linkend="reference"/>.
+    </para>
+
+  <section id="tgtcg">
+    <title>The Global Term Components Graph</title>
+
+    <para>Terms are the central data type. They reside in memory
+      managed by the Prolog engine, and are accessed via handles from the
+      C++ side. The handles are encapsulated by the class &term;,
+      which is the most important type for interfacing to Prolog.
+    </para>
+
+    <para>All the terms form a global graph of term components. Terms can
+      be atomic (atoms, numbers...), or compound. Compound terms consist of
+      a functor ID and pointers to subterms. They can share common
+      subterms. Interfacing to the Prolog engine is all about dealing with the
+      terms in this global graph.
+    </para>
+
+    <para>On the Prolog side, we have value semantics. This means,
+      variables denote values, not storage places like in C++. Values can't
+      be changed. Free variables denote values that are <quote>not yet
+      known</quote>. Terms can contain free variables, which makes them
+      <quote>incomplete values</quote>, a notion alien to imperative
+      programming. (Things become more complicated if you use non-logical
+      prediates.)
+    </para>
+
+    <para>Seen from the C++ side, terms <emphasis>do</emphasis> change, by
+      unification. Free variables can be bound. This replaces them by the
+      terms they get bound to. They also change by backtracking, when
+      bindings are undone. Subterms can be shared by several superterms.
+      When a subterm changes, all the superterms change as well. You can't
+      tell from a term which other terms share parts of it. Unification and
+      de-unification (binding and unbinding) are the only way terms can
+      change.
+    </para>
+
+    <para>A &term; object is a handle for a term in the global term
+      component graph. It behaves (mostly) like a pointer. Such pointers
+      are the only way to access terms. In particular, &term; objects don't
+      behave like term <emphasis>values</emphasis>. They are pointers.
+    </para>
+  </section>
+
+  <section>
+    <title>Initialisation</title>
+
+    <para>In version &version; it isn't yet possible to have the main()
+    function on the Prolog side. It must be a C++ function. </para>  <!-- XXX -->
+
+    <para>At the beginning, the Prolog engine must be initialised. This is
+      done by <literal>prolog_init()</literal>. It also must be shut
+      down at the end. &swipcpp; makes sure this happens. It is also
+      possible to explicitly shut down the Prolog engine and restart it.
+    </para>
+
+    <para>A typical <literal>main()</literal> function looks like this.
+    </para>
+
+<programlisting
+><![CDATA[int main(int argc, char** argv)
+{
+  try {
+    prolog_init(argc, argv);
+
+    // ...
+
+  } catch (PlError& err) {
+    cerr << "error: " << err.message() << endl;
+    return 1;
+  }
+}
+]]></programlisting>
+
+    <para>Anything involving the Prolog engine must be done after it is
+      started. [In fact, not exactly anything, but let's pretend so]. This
+      means that any Prolog related data (terms, atoms, functors, ...)
+      can't be static. The following will not work. Instead, one would have
+      to do the initialisation of any global or static data after the
+      engine is ready.
+    </para>
+
+<programlisting
+><![CDATA[Term t("foo(1,2,3)");
+
+int main(int argc, char** argv)
+{
+  // ...
+}
+]]></programlisting>
+
+    <para>There is a mechanism in &swipcpp; for handling such defered
+      initialisation; and reinitialisation in the case of a restarted
+      engine. All the affected classes have corresponding
+      <literal>Static</literal>... variants. If they are initialised while
+      the engine is not running, they defer the actual (Prolog-side)
+      initialisation until the engine is ready. If it is restarted, they
+      reinitialise. Apart from that, they behave mostly like
+      their non-static counterparts. The above can be achieved like this.
+    </para>
+
+<programlisting
+><![CDATA[StaticTerm t("foo(1,2,3)");
+
+int main(int argc, char** argv)
+{
+  // ...
+}
+]]></programlisting>
+
+  </section>
+
+  <section>
+    <title>Working With Terms</title>
+
+    <para>A &term; object is essentially a pointer into the global term
+      component graph. However, there is a difference: they can't be
+      compared. (There is no way to define comparision operators on the
+      terms-as-pointers). This means, for instance, that terms can't be
+      used as keys for sorted containers. The comparision operators which
+      are defined for &term; compare the terms pointed to, not the
+      pointers.
+    </para>
+
+    <para>Terms can be created from many data types, and they can be
+      converted to those data types. This is very convenient, since terms
+      can be used much like if they were the values they contain.
+      Similarly, global comparision operators are defined. For instance:
+    </para>
+
+<programlisting
+><![CDATA[Term myfunction(int i, Term t)
+{
+  if (i > t) {
+    int ints[] = { 1, 2, 3 };
+    return list<int>(ints, ints+3);
+  }
+  // ...
+}
+]]></programlisting>
+
+    <para>&term; objects refer data managed by the Prolog engine.
+      When new &term; obejcts are created, new storage space is allocated
+      inside the engine. It will eventually be garbage collected, if it
+      is no longer referenced. But simply destroying the &term; objects
+      will <emphasis>not</emphasis> remove the references. (Because of the
+      way the SWI-Prolog engine works, this isn't possible). In order to
+      ensure that unused data will be deleted, frames must be used. See
+      <xref linkend="frfrm"/>.
+    </para>
+
+    <para>C++ code called from the Prolog side (a foreign predicate) runs
+      in an implicit frame, so ressources it allocated will eventually be
+      reclaimed. But if the Prolog engine is embedded in C++ code (terms
+      being manipulated outside any foreign predicate invocations) frames
+      must be used explicitly. They should also be used in long
+      computations inside foreign predicates.
+    </para>
+
+  </section>
+
+  <section id="frfrm">
+    <title>Frames and Frame Membership</title>
+
+    <para>
+      Frames and frame membership do not need to be considered if terms are
+      only manipulated inside foreign predicates, and no &term; objects are
+      kept between invocations of foreign predicates (such as storing them
+      as global variables or on the heap). Otherwise, things become a bit
+      more complicated.
+    </para>
+
+    <para>Creating a new &term; object consumes ressources in the Prolog
+      engine in two ways. First, a cell on the so called <quote>local
+      stack</quote>, is allocated. Stack cells are references to data
+      (terms) held by the Prolog engine. Second, as long as such data is
+      referenced, it will not be garbage collected. Assigning a new value
+      to the &term; object will not destroy the old reference.
+    </para>
+
+    <para>
+      In order to reclaim the stack cells, code portions are enclosed
+      in frames. When the frame is left, all stack cells which have been
+      allocated inside of it will be freed. Closing a frame has no other
+      effect. After the local stack cells are no longer in use, the
+      data they refered can be garbage collected.
+      Frames nest. There is an implicit outermost frame, which encloses the
+      entire execution of the Prolog engine (from initialisation until
+      shutdown).
+    </para>
+
+    <para>Every foreign predicate runs in an implicit frame. This is
+      only the case if it is called by the Prolog engine, as a foreign
+      predicate. Calling the same function from the C++ side, as an
+      ordinary C++ function, does not make it run in a frame. Foreign
+      predicates are discussed in <xref linkend="fopre"/>.
+    </para>
+
+    <para>
+      Every valid &term; object is member of one of the currently active
+      frames, because it uses a stack cell. Closing a frame
+      <emphasis>invalidates any still existing &term; objects which belong
+      to that frame</emphasis>. Invalid &term;s are allowed to exist, but
+      they must not be used, except for assigning a new value.
+    </para>
+
+    <para>
+      When a new &term; object is created, it becomes member of the
+      currently active (innermost) frame. &frame;s are supposed to be used
+      as automatic variables. When a &frame; object is destroyed (when the
+      variable goes out of scope), the corresponding frame is closed.
+      &term;s should be automatic variables as well, and be passed by
+      value. When used this way, invalid &term;s are unlikely to occur. For
+      instance:
+    </para>
+
+<programlisting
+><![CDATA[Term t1;
+{
+  Frame fr;
+  Term t2 = "foo(X,Y)";
+  func(t2);
+  t1.unify(t2);
+  // ...
+
+} // t2 invalidated and out of scope, t1 unaffected
+]]></programlisting>
+
+    <para>The following, on the other hand, will probably cause a crash.
+    </para>
+
+<programlisting
+><![CDATA[Term* termptr;
+{
+  Frame fr;
+  termptr = new Term;
+  termptr->unify("foo(X,Y)");
+}
+cout << *termptr;
+]]></programlisting>
+
+    <para>When a &term; object is assigned a new value - being made point to
+      another term - it <emphasis>changes frame membership</emphasis>. It
+      <quote>migrates</quote> to the same frame as the other &term;. (This
+      unfortunate behaviour can't be avoided; see the <link
+      linkend="termsemantics">implementation notes</link> for details
+      why).
+    </para>
+
+<programlisting
+><![CDATA[Term t;
+{
+  Frame fr;
+  t = 42;
+} // t invalidated
+
+cout << t; // crash
+]]></programlisting>
+
+    <para>In the above example, <literal>t = 42</literal> is the same as
+      <literal>t = Term(42)</literal>, and the new term <quote>42</quote>
+      becomes member of the frame <literal>fr</literal>.
+      <literal>t</literal> is then assigned this new term, and also becomes
+      member of <literal>fr</literal>. It is invalidated when
+      <literal>fr</literal> is left.
+    </para>
+
+    <para>In order to avoid this, the following code should be used instead.
+      <literal>t</literal> starts by pointing to a free variable, which can
+      then be bound.
+    </para>
+
+<programlisting
+><![CDATA[Term t;
+{
+  Frame fr;
+  t.unify(42);
+}
+
+cout << t;
+]]></programlisting>
+
+    <para>In the above example, the &term; object isn't actually changed -
+      the term pointed to is changed. 
+    </para>
+
+    <para>Yet to discuss is a more exotic way to assign to a &term;,
+      which should be avoided if at all possibe. It's the
+      <literal>Term::assign()</literal> method. Sometimes it might be
+      necessary to actually change the pointer, making it point to a
+      different term. <literal>assign()</literal> does this. It does
+      the same as an assignment, but <emphasis>without</emphasis> making
+      the &term; object migrate to a different frame. The example can also
+      correctly be implemented like this. Again, a term is created from the
+      integer 42 by an implicit conversion.
+    </para>
+
+<programlisting
+><![CDATA[Term t;
+{
+  Frame fr;
+  t.assign(42);
+}
+
+cout << t;
+]]></programlisting>
+
+    <para>The drawback is that <literal>assign()</literal> can not be used
+      if copies of the &term; object exist. You must guarantee this, or you
+      will break the class &term;'s semantics of behaving like pointers to
+      terms. For instance:
+    </para>
+
+<programlisting
+><![CDATA[Term t1 = 42;
+Term t2 = t1;
+
+// t1 == t2 == 42
+
+t1.assign("foobar");
+
+// Now *both*, t1 and t2 point to "foobar".
+]]></programlisting>
+
+    <para>(The difference between <literal>Term::operator = ()</literal> and
+      <literal>Term::assign()</literal> is that the assignment operator
+      makes the object use the same stack cell as the other term, whereas
+      <literal>assign()</literal> changes the contents of the stack cell in
+      use.)
+    </para>
+
+    <para>When possible, unification should be used instead of
+      <literal>assign()</literal>. Another option might be <link
+      linkend="recordedterm">&recordedterm;</link>.
+    </para>
+
+    <para>So far, the use of frames for freeing unused memory space inside
+      the Prolog engine has been discussed. There is another purpose for
+      frames: causing backtracking.
+    </para>
+
+    <para>
+      Backtracking is caused by calling the frame's
+      <literal>rewind()</literal> method. This will backtrack to the point
+      where the frame was opened, undoing all unifications (bindings). The
+      references to data created inside the Prolog engine are also
+      destroyed. This means that all &term; objects which belong to the
+      frame are invalidated. Calling <literal>rewind()</literal> does not
+      close the frame. It just goes back to the state when the frame has
+      been opened.
+    </para>
+  </section>
+
+  <section id="fopre">
+    <title>Foreign Predicates</title>
+  </section>
+
+  <para>XXX not yet written
+  </para>
+
+  <section id="cam">
+    <title>Concepts and Models</title>
+
+    <para>In order to precisely capture some of the semantics of the
+      classes provided by &swipcpp;, this documentation uses the notions of
+      <emphasis>concepts</emphasis> and <emphasis>models</emphasis>, as
+      defined in <ulink url="http://www.sgi.com/tech/stl/">SGI's
+      documentation of the Standard Template Library</ulink>.
+    </para>
+
+    <para>In short, a concept specifies a set of syntactic expressions
+      which must be valid for a type, and their meaning. A model of the
+      concept is a type which satisfies all the requirements. The generic
+      (template based) classes and functions of the STL can be used for
+      types which are models of the specified concepts. See the <ulink url=
+      "http://www.sgi.com/tech/stl/stl_introduction.html">introduction
+      page of the SGI documentation</ulink> for details.
+    </para>
+
+    <para>The following concepts are used in &swipcpp;. The semantics are
+      that some operations are defined the way you would expect.</para>
+
+    <section id="concepta"><title>Assignable</title>
+
+      <para>A type is Assignable if it is possible to copy objects of
+        that type and to assign values of the type to variables. The
+        copy constructor, assignment operator and
+        <literal>swap</literal> method must be defined.</para>
+
+      <para><ulink
+        url="http://www.sgi.com/tech/stl/Assignable.html">Entry in the
+        SGI documentation</ulink></para>
+    </section>
+
+    <section id="conceptdc"><title>Default Constructible</title>
+
+      <para>A type is Default Constructible if it has a default
+        constructor.</para>
+
+      <para><ulink
+        url="http://www.sgi.com/tech/stl/DefaultConstructible.html"
+        >Entry in the SGI documentation</ulink></para>
+    </section>
+
+    <section id="conceptec"><title>Equality Comparable</title>
+
+      <para>A type is Equality Comparable if objects of that type can be
+        compared for equality using <literal>operator == ()</literal>, and
+        if it is an equivalence relation. <literal>operator
+        == ()</literal> and <literal>operator != ()</literal> must be
+        defined.
+      </para>
+
+      <para><ulink
+        url="http://www.sgi.com/tech/stl/EqualityComparable.html"
+        >Entry in the SGI documentation</ulink></para>
+    </section>
+
+    <section id="conceptltc"><title>Less Than Comparable</title>
+
+      <para>A type is Less Than Comparable if it has the comparision
+        operators <literal>&gt;</literal>, <literal>&lt;</literal>,
+        <literal>&gt;=</literal> and <literal>&lt;=</literal> defined,
+        and they implement a partial ordering.
+      </para>
+
+      <para><ulink
+        url="http://www.sgi.com/tech/stl/LessThanComparable.html">
+        Entry in the SGI documentation</ulink></para>
+    </section>
+
+  </section>
+
+  </chapter> <!-- User Guide -->
+
+  <chapter id="reference">
+    <title>Reference</title>
+
+    <section id="startstop">
+      <title>Starting and Restarting the Prolog Engine</title>
+
+<programlisting
+><![CDATA[void prolog_init(int argc, char const * const * argv);
+void prolog_halt(void);
+]]></programlisting>
+
+      <para><function>prolog_init</function> initialises the Prolog engine.
+        It must be called before anything which involves it can be
+        performed. The parameters <parameter>argc</parameter> and
+        <parameter>argv</parameter> are the ones from the
+        <function>main</function> function. It calls the &fli; function
+        <function>PL_initialise</function>. This can fail for many reasons,
+        in which case a &generalerror; is thrown. See the SWI-Prolog
+        Reference Manual for the exact actions which are taken.
+      </para>
+
+      <para><function>prolog_halt</function> shuts down the prolog engine.
+        This is done automatically when the program exits, so you normally
+        do not need to call this function.
+      </para>
+
+      <para>You can shut down the prolog engine with
+      <function>prolog_halt</function> and restart it with
+      <function>prolog_init</function>. Note that this is very expensive.
+      All data which lives inside the Prolog engine is destroyed in this
+      process, all &term; objects invalidated, etc.
+      </para>
+
+    </section>
+
+    <section>
+      <title>Global Functions and Operators</title>
+
+      <section>
+        <title><function>unify</function></title>
+<anchor id="__unify"/><programlisting
+><![CDATA[bool unify(const Term& t1, const Term& t2);
+
+template <typename T>
+bool unify(const Term& t, const T& v);
+
+template <typename T>
+bool unify(const T& v, const Term& t);
+]]></programlisting>
+
+        <para>These functions are defined for convenience. They are the same as
+          <literal>t1.unify(t2)</literal> and <literal>t.unify(v)</literal>,
+          respecitvely. See <link linkend="term__unify">Term::unify()</link>.
+        </para>
+
+      </section>
+
+      <section>
+        <title>Comparision Operators</title>
+
+<programlisting
+><![CDATA[template <typename V> bool operator == (const Term&, const V&);
+template <typename V> bool operator == (const V&,    const Term&);
+template <typename V> bool operator != (const Term&, const V&);
+template <typename V> bool operator != (const V&,    const Term&);
+template <typename V> bool operator >  (const Term&, const V&);
+template <typename V> bool operator >  (const V&,    const Term&);
+template <typename V> bool operator <  (const Term&, const V&);
+template <typename V> bool operator <  (const V&,    const Term&);
+template <typename V> bool operator >= (const Term&, const V&);
+template <typename V> bool operator >= (const V&,    const Term&);
+template <typename V> bool operator <= (const Term&, const V&);
+template <typename V> bool operator <= (const V&,    const Term&);
+]]></programlisting>
+
+        <para>These operators let you compare a term to a value of any type
+          which it can be converted to. First they convert the &term;
+          parameter to the template type <literal>V</literal>. Then they
+          apply the corresponding comparision operator. This way, a &term;
+          can be compared with a value of any type which it can be converted
+          to, and which has the comparision operator defined. If the
+          conversion fails, an exception is raised (at least for the
+          conversions defined by &swipcpp;).
+        </para>
+
+        <para>For instance, assume <literal>t</literal> is of type &term;.
+          Then <literal>t &gt; 42</literal> means <literal>((int) t) &gt;
+          42</literal>. This is different from <literal>t &gt; (Term)
+          42</literal>, which compares <literal>t</literal> to
+          <literal>42</literal> in standard term order. When both arguments
+          are terms, you they are always compared in standard term order. If
+          you want to compare them as values of some type, you need to
+          convert one of them. For instance, <literal>t1 &gt; (int)
+          t2</literal>.
+        </para>
+
+      </section>
+
+      <section>
+        <title><function>atom_to_term</function></title>
+
+<programlisting
+><![CDATA[bool atom_to_term(const char* text, Term* term, list<Term::Binding>* bindings);
+
+struct Term::Binding
+{
+  string name;
+  Term   var;
+  Binding(string n, Term v) : name(n), var(v) {}
+};
+
+Term::operator Binding () const;
+]]></programlisting>
+
+        <para>This is an interface to the <literal>atom_to_term/3</literal>
+          predicate. The new term is stored in <literal>term</literal>, if
+          successful, and the list of bindings is converted to
+          <literal>list&lt;Term::Binding&gt;</literal> and stored in
+          <literal>bindings</literal>. The return value if
+          <literal>true</literal> if the conversion was successful.
+        </para>
+
+        <para>The conversion operator converts a term in the form <literal>Name =
+          Value</literal> to a <literal>Term::Binding</literal>. It is used
+          by <literal>atom_to_term()</literal>.
+        </para>
+
+      </section>
+    </section>
+
+
+    <section>
+      <title>Types</title>
+
+    <section id="atom">
+      <title>&atom;</title>
+
+      <para>The class &atom; represents Prolog atoms. It is a model of
+        &conceptec;, &conceptltc; and &concepta;. &atom; objects don't have
+        any meaningful order, such as lexicographic. It is only guaranteed
+        that the comparision operators implement a total ordering. This is
+        enough to store atoms in sorted containers such as
+        <literal>set&lt;&gt;</literal> or <literal>map&lt;&gt;</literal>.
+        (In fact, the handles which the Prolog engine assigns are
+        compared).
+      </para>
+
+<programlisting
+><![CDATA[Atom::Atom(const char *);
+Atom::Atom(string);
+]]></programlisting>
+
+        <para>This creates an &atom; which represents an already existing
+          or newly created Prolog atom. The string is copied to memory
+          managed by the Prolog engine.
+        </para>
+
+<programlisting
+><![CDATA[Atom::Atom(const Term&);
+Atom::Atom(string);
+]]></programlisting>
+
+        <para>This extracts an atom from a term which only consists of
+          that atom. If the term does not encapsulate one atom, then an
+          &conversionerror; exception is raised.
+        </para>
+
+<programlisting
+><![CDATA[bool Atom::operator == (const Atom&) const;
+bool Atom::operator != (const Atom&) const;
+
+bool Atom::operator >  (const Atom&) const;
+bool Atom::operator <  (const Atom&) const;
+bool Atom::operator >= (const Atom&) const;
+bool Atom::operator <= (const Atom&) const;
+
+Atom::Atom(const Atom&);
+Atom::operator = (const Atom&);
+void Atom::swap(Atom&);
+]]></programlisting>
+
+        <para>These implement the concepts &conceptec;, &conceptltc; and
+          &concepta;.
+        </para>
+
+<programlisting
+><![CDATA[Atom::operator const char * () const;
+]]></programlisting>
+
+        <para>This returns the atom as a string. The string resides in
+          static memory managed by the Prolog engine, and remains valid as
+          long as it is not garbage collected. This means, as long as any
+          term exists which uses the atom. It must not be changed.
+        </para>
+
+        <para>The conversion requires one function call. This is relatively
+          expensive.
+        </para>
+
+<programlisting
+><![CDATA[ostream& operator << (ostream&, const Atom&);
+]]></programlisting>
+
+        <para>This writes the atom as a string to the stream.
+        </para>
+
+    </section>
+
+    <section>
+      <title>&frame;</title>
+
+      <para>There are two purposes of frames: reclaiming ressources and
+        retrying. Creating new &term; objects will consume local stack
+        cells in the Prolog engine. Enclosing a code portion in a frame
+        will reclaim the stack cells when the frame is left, thereby
+        invalidating any &term; objects which might still be using them.
+        Closing a frame has no other effect.
+      </para>
+
+      <para>Rewinding a frame is a different thing. It has the effect of
+        backtracking to the point where the frame was opened. All bindings
+        (unifications) done since the frame was opened are undone, and all
+        data created inside the Prolog engine is no longer referenced and
+        therefore deleted. The local stack cells are also reclaimed.
+      </para>
+
+      <para>Note that every foreign predicate invocation done by the Prolog
+        engine runs inside an implicit frame.
+      </para>
+
+<programlisting
+><![CDATA[Frame::Frame();
+]]></programlisting>
+
+      <para>This opens a new frame. It will be closed when the object is
+        destroyed. Normally, a &frame; is an automatic variable, so the
+        frame will be closed when the variable goes out of scope.
+      </para>
+
+<programlisting
+><![CDATA[Frame::~Frame();
+]]></programlisting>
+
+      <para>Destroying the &frame; object closes the frame. All &term;
+        objects which belong to the frame are invalidated, and the
+        associated ressources (cells on the local stack) reclaimed. Any
+        unifications done with the terms pointed to stay in effect.
+      </para>
+
+<programlisting
+><![CDATA[void Frame::rewind();
+]]></programlisting>
+
+      <para>Invalidate all &term;s which belong to the frame, and undo all
+        unifications done since the frame was created. The frame stays
+        open. This calls the &fli; function
+        <literal>PL_rewind_foreign_frame()</literal>.
+      </para>
+
+      <para>(There is no need for an equivalent of
+        <literal>PL_discard_foreign_frame</literal>, because the effect is
+        achieved by calling <literal>Frame::rewind()</literal> before the &frame;
+        object is destroyed).
+      </para>
+    </section>
+
+    <section>
+      <title>&functor;</title>
+
+      <para>A &functor; object represents a name/arity pair, as used by
+        Prolog for constructing terms.
+      </para>
+
+      <para>&functor; is a model of &conceptec;, &conceptltc; and
+        &concepta;. Two &functor; objects are equal iff they represent the
+        same functor. The comparision operations implement no particular
+        ordering.
+      </para>
+
+<programlisting
+><![CDATA[Functor::Functor(const char * name, int arity);
+Functor::Functor(string name, int arity)
+]]></programlisting>
+
+      <para>Make a new &functor; object which represents a newly
+        registered or an alreay existing one.
+      </para>
+
+<programlisting
+><![CDATA[Functor::Functor(const Term&);
+]]></programlisting>
+
+      <para>Extract the uppermost functor from the term. Throw a
+        &conversionerror; exception if the it is not compound or an atom.
+      </para>
+
+<programlisting
+><![CDATA[const char* Functor::name() const;
+int Functor::arity() const;
+]]></programlisting>
+
+      <para>Get name and arity of the functor, respecitvely. The pointer
+        returned by <literal>name()</literal> points to storage managed by
+        the Prolog engine.
+      </para>
+
+<programlisting
+><![CDATA[string Functor::info() const;
+]]></programlisting>
+
+      <para>Return name and arity of the functor as a string in the form
+        <quote><literal>name/arity</literal></quote>.
+      </para>
+
+<programlisting
+><![CDATA[bool Functor::operator == (const Functor&) const;
+bool Functor::operator != (const Functor&) const;
+
+bool Functor::operator >  (const Functor&) const;
+bool Functor::operator <  (const Functor&) const;
+bool Functor::operator >= (const Functor&) const;
+bool Functor::operator <= (const Functor&) const;
+
+Functor::Functor(const Functor&);
+Functor::Functor operator = (const Functor&);
+void Functor::swap(Functor&);
+]]></programlisting>
+
+      <para>These implement the concepts &conceptec;, &conceptltc; and
+        &concepta;.
+      </para>
+
+    </section>
+
+    <section>
+      <title>&module;</title>
+
+      <para>A &module; object holds a handle for a SWI-Prolog
+        module. They are needed at various points inside &swipcpp;.
+        Since <literal>const char *</literal> and <literal>string</literal>
+        are convertible to &module;, you can always specify the module's
+        name instead.
+      </para>
+
+      <para>&module; is a model of &conceptec;, &conceptltc; and
+        &concepta;.
+      </para>
+
+      <para>&module; has a null value, created by the default constructor.
+        Its meaning depends on the context.
+      </para>
+
+<programlisting
+><![CDATA[Module::Module(const char*);
+Module::Module(string);
+]]></programlisting>
+
+      <para>These two constructors create a &module; which represents
+        either an already existing SWI-Prolog module, or a newly created
+        one. The argument is the module name. Calling the first one with a
+        null string has the same effect as the default constructor.
+      </para>
+
+<programlisting
+><![CDATA[Module::Module();
+]]></programlisting>
+
+      <para>This creates the &module; null value.
+      </para>
+
+<programlisting
+><![CDATA[const char* Module::name() const;
+]]></programlisting>
+
+      <para>Return the name of the module.
+      </para>
+
+<programlisting
+><![CDATA[static Module Module::context();
+]]></programlisting>
+
+      <para>Return the current context module.
+      </para>
+
+<programlisting
+><![CDATA[static Module Module::user();
+]]></programlisting>
+
+      <para>Return the module with the name <literal>user</literal>. That's
+        the main module in SWI-Prolog.
+      </para>
+
+<programlisting
+><![CDATA[bool Module::operator == (const Module&) const;
+bool Module::operator != (const Module&) const;
+
+bool Module::operator >  (const Module&) const;
+bool Module::operator <  (const Module&) const;
+bool Module::operator >= (const Module&) const;
+bool Module::operator <= (const Module&) const;
+
+Module::Module(const Module&);
+Module::Module operator = (const Module&);
+void Module::swap(Module&);
+]]></programlisting>
+
+      <para>These implement the concepts &conceptec;, &conceptltc; and
+        &concepta;.
+      </para>
+
+    </section>
+
+    <section>
+      <title>&predicate;</title>
+
+      <para>A &predicate; differs from a &functor; in that it also has an
+        associated context module. It is used to refer to predicates, but
+        the predicate does not acutally need to be defined. It rather
+        represents a name-arity-module triple.
+      </para>
+
+      <para>&predicate; is a model of &conceptec;, &conceptltc; and
+        &concepta;. Two &predicate; objects are equal iff they represent the
+        same predicate. The comparision operations implement no particular
+        ordering.
+      </para>
+
+<programlisting
+><![CDATA[Predicate::Predicate(Functor, Module context_module = Module::context());
+]]></programlisting>
+
+      <para>Create a new &predicate; from functor and context module.
+        The context module of the predicate defaults to the current context
+        module.
+      </para>
+
+<programlisting
+><![CDATA[Predicate::Predicate(const char* name, int arity, Module context_module = Module::context());
+]]></programlisting>
+
+      <para>Create a new &predicate; from name, arity and context module.
+        The context module of the predicate defaults to the current context
+        module.
+      </para>
+
+<programlisting
+><![CDATA[void Predicate::info(char const ** name, int* arity, module_t * module) const;
+]]></programlisting>
+
+      <para>Store name, arity and context module of the predicate in <literal>name</literal>,
+        <literal>arity</literal> and <literal>module</literal>. The pointer
+        stored in <literal>name</literal> points to memory managed by the
+        Prolog engine.
+      </para>
+
+<programlisting
+><![CDATA[const char* Predicate::name() const;
+int Predicate::arity() const;
+Module Predicate::module() const;
+]]></programlisting>
+
+      <para>Get name, arity and context module of the predicate,
+        respectively. The pointer returned by <literal>name()</literal>
+        points to memory managed by the Prolog engine.
+      </para>
+
+<programlisting
+><![CDATA[string Predicate::info() const;
+]]></programlisting>
+
+      <para>Return a descriptive text for the predicate in the form
+        <quote><literal>module:name/arity</literal></quote>.
+      </para>
+
+<programlisting
+><![CDATA[bool Predicate::operator == (const Predicate&) const;
+bool Predicate::operator != (const Predicate&) const;
+
+bool Predicate::operator >  (const Predicate&) const;
+bool Predicate::operator <  (const Predicate&) const;
+bool Predicate::operator >= (const Predicate&) const;
+bool Predicate::operator <= (const Predicate&) const;
+
+Predicate::Predicate(const Predicate&);
+Predicate Predicate::operator = (const Predicate&);
+void swap(Predicate&);
+]]></programlisting>
+
+      <para>These implement the concepts &conceptec;, &conceptltc; and
+        &concepta;.
+      </para>
+    </section>
+
+    <section id="query">
+      <title>&query;</title>
+
+      <para>A &query; is a simple and direct wrapper of the &fli; query
+        functions. The following limitations apply.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>The query can by secified as the predicate to be called
+            only. You can't directly specify a complex term as a query,
+            like you can in Prolog. Any composite subterms of the predicate
+            must be supplied as argument terms, which you must build and
+            decompose on your own. &staticquery; provides a more
+            comfortable interface.
+          </para>
+        </listitem>
+        <listitem>
+          <para>When the frame in which the query was created is left, and
+            the query is still running, it is implicitly closed. This
+            never occurs if frames and queries are automatic variables.
+          </para>
+        </listitem>
+        <listitem>
+          <para>The Prolog engine must be running before a &query; object can
+            be created. Normally, they are created as automatic variables.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Only one query at a time may be running, except for
+            recursively invoked foreign predicates. This restriction is due
+            to the &fli;
+          </para>
+        </listitem>
+        <listitem>
+          <para>The results are deunified when the next result is acquired.
+            This is not really a limitation, but the way backtracking
+            works.
+          </para>
+        </listitem>
+      </itemizedlist>
+
+<programlisting
+><![CDATA[Query::Query(const char * name, int arity, Module context_module = Module());
+Query::Query(Predicate predicate, Module context_module = Module());
+]]></programlisting>
+
+      <para>These two constructors create a new query from the predicate to
+        be called and the context module. To the first one, you specify the
+        predicate as name and arity, to the second one as a &predicate;
+        object. The context module is relevant only for context transparent
+        queries (see the &srm;). The singleton context module, which is the
+        default parameter, means the context module of the calling context.
+      </para>
+
+<programlisting
+><![CDATA[Query::~Query();
+]]></programlisting>
+
+      <para>The destructor closes the query, if this hasn't already been done.
+      </para>
+
+<programlisting
+><![CDATA[template <typename ForwardIterator>
+Query& Query::operator () (ForwardIterator begin, ForwardIterator end);
+
+Query& Query::operator () (Term, Term, Term, Term, Term, Term, Term, Term, Term);
+Query& Query::operator () (Term, Term, Term, Term, Term, Term, Term, Term);
+Query& Query::operator () (Term, Term, Term, Term, Term, Term, Term);
+Query& Query::operator () (Term, Term, Term, Term, Term, Term);
+Query& Query::operator () (Term, Term, Term, Term, Term);
+Query& Query::operator () (Term, Term, Term, Term);
+Query& Query::operator () (Term, Term, Term);
+Query& Query::operator () (Term, Term);
+Query& Query::operator () (Term);
+Query& Query::operator () ();
+]]></programlisting>
+
+      <para>These operators supply the arguments and start the query. You
+        can either supply the arguments (all &term;s) as a STL style range,
+        or directly for up to nine arguments. The result is returned by
+        unifying unbound variables within the argument terms. The first
+        result will be retruned as soon as <literal>Query::next()</literal>
+        is called for the first time. The operators test if the number of
+        arguments matches the required number, and if another query is
+        still running. In either case, a &logicerror; is thrown.
+      </para>
+
+<programlisting
+><![CDATA[bool Query::next();
+]]></programlisting>
+
+      <para>Generate the first or next result. The unifications done in the
+        argument terms for the previous result are always undone. If there
+        is another result, it is retured by (again) unifying the arguments,
+        and <literal>true</literal> is returned. If there is none, the
+        query is automatically closed and <literal>false</literal> is
+        returned. Prolog exceptions, raised inside the Prolog engine, are
+        converted to C++ and thrown as &prologexception;s. A &logicerror; is
+        raised if the query isn't running. Also see the <link
+        linkend="unsafe_exceptions"><literal>unsafe_exceptions</literal></link> flag.
+      </para>
+
+<programlisting
+><![CDATA[void Query::close();
+]]></programlisting>
+
+      <para>Close the query prematurely, undoing all unifications done in
+        the arguments. Afterwards the query can be started again. A &logicerror; is
+        raised if the query isn't running.
+      </para>
+
+<programlisting
+><![CDATA[void Query::cut();
+]]></programlisting>
+
+      <para>Closes the query prematurely, but retains the last result. That
+        is, the unifications done in the argument terms are not undone, and
+        the result stays valid. Afterwards the query can be started again.
+        A &logicerror; is raised if the query isn't running.
+      </para>
+
+<anchor id="unsafe_exceptions"/><programlisting
+><![CDATA[bool Query::unsafe_exceptions;
+]]></programlisting>
+
+      <para>This flag is normally <literal>false</literal>. If set to
+        <literal>true</literal>, it causes <literal>Query::next()</literal>
+        to throw &unsafeprologexception;s instead of &prologexception;s.
+        You normally don't need this flag.
+      </para>
+
+      <para>A Prolog exception is a term. Throwing terms as parts of
+        exceptions is a bad idea, because many things can happen to them
+        when the stack is unwound. Most notably, when leaving a frame, they
+        are invalidated. Also, shared subterms could be changed by
+        unification or deunification. Therefore, &prologexception; stores
+        the term in its external representation, as returned by
+        <literal>Term::to_external()</literal>. This makes it completely
+        unvolunerable to any hazards. The method
+        <literal>as_term()</literal> converts the term back, so what it
+        returns is actually a deep copy of the original term.
+      </para>
+
+      <para>The safety comes at a small price. First, there is a
+        performance penalty for creating the external representation.
+        Normally exceptions are exceptional, and exception terms are
+        small, so there is no problem. Second, it
+        <emphasis>might</emphasis> be possible, in some pathological
+        design, that indirectly changing the exception term via unification
+        or deunification of shared subterms is intended. This normally
+        isn't the case. Under almost all circumstances, the default
+        behaviour is fine.
+      </para>
+
+      <para>The <literal>unsafe_exceptions</literal> flag gives you full
+        control. <link
+        linkend="unsafeprologexception">&unsafeprologexception;</link>
+        differs from &prologexception; in that it does not store the
+        exception term in external form, but includes it as a &term;
+        attribute, which is returned by <literal>as_term()</literal>. This
+        is dangerous.
+      </para>
+
+    </section>
+
+    <section id="recordedterm">
+      <title>&recordedterm;</title>
+
+      <para>This is an interface to SWI-Prolog's <quote>recorded
+        database</quote>. A &recordedterm; object embodies an entry in it.
+        The recorded database exists only while the Prolog engine is
+        running. The objects have a singular state, created by the default
+        constructor or the method <literal>clear()</literal>, which also
+        exists while the engine is not running. In this state, a
+        &recordedterm; object (logically) holds a term consisting of a free
+        variable. A &recordedterm; may be created only in singular state, as
+        long as the Prolog engine isn't initialized yet. When the engine is
+        shut down, all &recordedterm; objects go to singular state.
+      </para>
+
+      <para>&recordedterm; is a model of &conceptec;, &conceptltc; and
+        &conceptdc;. The comparision operators implement no particular
+        ordering. It is not a model of &concepta;, because copying is
+        expensive. &recordedterm;s can be copied via the
+        <literal>duplicate()</literal> method.
+      </para>
+
+<programlisting
+><![CDATA[RecordedTerm::RecordedTerm();
+]]></programlisting>
+
+      <para>Initialise the &recordedterm; in singular state, that is,
+        holding a free variable. This does not
+        require the Prolog engine to be running.
+      </para>
+
+<programlisting
+><![CDATA[RecordedTerm::RecordedTerm(Term);
+]]></programlisting>
+
+      <para>Make the new &recordedterm; holding a copy of the argument.
+      </para>
+
+<programlisting
+><![CDATA[Term RecordedTerm::term();
+RecordedTerm::operator Term ();
+]]></programlisting>
+
+      <para>Retrieve a copy of the term stored the recorded database. Each
+        call will create a new deep copy.
+      </para>
+
+<programlisting
+><![CDATA[void RecordedTerm::operator = (Term t);
+]]></programlisting>
+
+      <para>Store a new term in this &recordedterm;, deleting the old
+        recorded database entry.
+      </para>
+
+<programlisting
+><![CDATA[void RecordedTerm::clear ();
+]]></programlisting>
+
+      <para>Bring the &recordedterm; to singular state, making it hold a
+        free variable. Same as <literal>... = Term();</literal> (but slightly
+        more efficient).
+      </para>
+
+<programlisting
+><![CDATA[bool RecordedTerm::operator == (const RecordedTerm&) const;
+bool RecordedTerm::operator != (const RecordedTerm&) const;
+
+bool RecordedTerm::operator >  (const RecordedTerm&) const;
+bool RecordedTerm::operator <  (const RecordedTerm&) const;
+bool RecordedTerm::operator >= (const RecordedTerm&) const;
+bool RecordedTerm::operator <= (const RecordedTerm&) const;
+]]></programlisting>
+
+      <para>These implement the concepts &conceptec; and &conceptltc;.
+      </para>
+
+<programlisting
+><![CDATA[void swap(RecordedTerm&);
+]]></programlisting>
+
+      <para>Make the two &recordedterm;s change contents. This is a cheap
+        operation. 
+      </para>
+
+<programlisting
+><![CDATA[void RecordedTerm::duplicate(const RecordedTerm&);
+]]></programlisting>
+
+      <para>Make the object a deep copy of the other &recordedterm;. This
+        is expensive.
+      </para>
+
+    </section>
+
+    <section>
+      <title>&staticatom;</title>
+
+      <para>This is the <quote>static</quote> version of the &atom; class.
+        It can be initialised before the Prolog engine is running, and
+        reinitialises itself automatically when the engine is restarted.
+      </para>
+
+<programlisting
+><![CDATA[StaticAtom::StaticAtom(const char*)
+]]></programlisting>
+
+      <para>Create a &staticatom; consisting of the supplied text. This
+        string must remain valid. The &staticatom; does not take ownership
+        or copy it. It is meant to be a string literal.
+      </para>
+    </section>
+
+    <section>
+      <title>&staticfunctor;</title>
+
+      <para>This is the <quote>static</quote> version of the &functor; class.
+        It can be initialised before the Prolog engine is running, and
+        reinitialises itself automatically when the engine is restarted.
+      </para>
+
+<programlisting
+><![CDATA[StaticFunctor::StaticFunctor(const char * name, int arity);
+]]></programlisting>
+
+      <para>Create a &staticfunctor; from name and arity. The string
+        must remain valid. The &staticfunctor; does not take ownership or
+        copy it. It is meant to be a string literal.
+      </para>
+    </section>
+
+    <section>
+      <title>&staticpredicate;</title>
+
+      <para>This is the <quote>static</quote> version of the &predicate; class.
+        It can be initialised before the Prolog engine is running, and
+        reinitialises itself automatically when the engine is restarted.
+      </para>
+
+<programlisting
+><![CDATA[StaticPredicate::StaticPredicate(const char* name, int arity, const char* module = "user")
+]]></programlisting>
+
+      <para>Create a &staticpredicate; from name, arity and module. The two
+        strings
+        must remain valid. The &staticpredicate; does not take ownership or
+        copy them. They are meant to be a string literals.
+      </para>
+    </section>
+
+    <section>
+      <title>&staticquery;</title>
+
+      <para>This is a subclass of &query;, and improves it in the following ways.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>&staticquery; objects can be created before the Prolog
+            engine is running. The actual initialisation is defered. They
+            reinitialise themselves when the engine is restarted. This
+            makes &staticquery; suitable for objects which reside in static
+            memory, such as global variables.
+          </para>
+        </listitem>
+        <listitem>
+          <para>An easy way for specifying queries which have subterms is
+            provided, which makes it exactly like in Prolog.
+          </para>
+        </listitem>
+      </itemizedlist>
+
+      <para>A &staticquery; can be specified in one of two ways.
+        <quote>Predicate mode</quote> is the way &query; works. You specify
+        a predicate, and its arguments are the query arguments.
+      </para>
+
+      <para>In <quote>Prolog mode</quote> the query still has a
+        predicate to be called, but its arguments may themselves be terms,
+        with the actual query arguments being free variables inside of
+        them. In this mode, the arguments provided when a new query is
+        started, are filled in there. Only non-anonymous variables (names
+        not starting with <quote>&lt;literal&gt;_&lt;/literal&gt;</quote>)
+        become query arguments. For instance, the term
+        <literal>mypred(foo(bar(X,_,Y)),Z)</literal> specifies a query
+        which has three arguments.
+      </para>
+
+      <para>Predicate mode is more efficient than Prolog mode, both time
+        and space wise. The &staticquery; can't know if the predicate
+        arguments it constructed last time, are still valid when a new
+        query is started. Therefore, it stores them in a &recordedterm;,
+        and creates a new copy every time. This means, a handfull of
+        possible extra function calls to the &fli;, and a few extra terms
+        created, which will later be garbage collected.
+      </para>
+
+<programlisting
+><![CDATA[StaticQuery::StaticQuery(const char* name, int arity, const char* mod = 0);
+StaticQuery::StaticQuery(const char* text, const char* mod = 0);
+]]></programlisting>
+
+      <para>The first one creates the new &staticquery; in predicate
+        mode, like &query;. <literal>name</literal> and
+        <literal>arity</literal> are name and arity of the predicate to be
+        called.
+        The second one creates it in Prolog mode. <literal>text</literal>
+        specifies the query as a term.
+      </para>
+
+      <para>
+        <literal>mod</literal> is the name of the context module (which is
+        relevant only for module transparent predicates). <quote>When NULL, the
+        context module of the calling context will be used, or user if
+        there is no calling context (as may happen in embedded systems).</quote>
+      </para>
+
+      <para><literal>name</literal>, <literal>text</literal> and
+        <literal>mod</literal> must stay valid, so they can be used when
+        the Prolog engine is stared or restarted. They are supposed to be
+        string literals. No memory management is done of them by
+        &staticquery;.
+      </para>
+
+<programlisting
+><![CDATA[template <typename ForwardIterator>
+StaticQuery& StaticQuery::operator () (ForwardIterator begin, ForwardIterator end);
+
+StaticQuery& StaticQuery::operator () (Term, Term, Term, Term, Term, Term, Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term, Term, Term, Term, Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term, Term, Term, Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term, Term, Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term, Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term, Term);
+StaticQuery& StaticQuery::operator () (Term, Term);
+StaticQuery& StaticQuery::operator () (Term);
+StaticQuery& StaticQuery::operator () ();
+
+bool StaticQuery::next();
+void StaticQuery::cut();
+void StaticQuery::close();
+]]></programlisting>
+
+      <para>Same as with <link linkend="query">&query;</link>.
+      </para>
+
+    </section>
+
+    <section>
+      <title>&staticterm;</title>
+
+      <para>&staticterm; is a subclass of &recordedterm; and provides
+        automatical initalisation. It is a model of &conceptec;,
+        &conceptltc; and &conceptdc;. The comparision operators implement
+        no particular ordering. It is not a model of &concepta;, because
+        copying is expensive. It is still possible via the
+        <literal>duplicate()</literal> method.
+      </para>
+
+<programlisting
+><![CDATA[StaticTerm::StaticTerm();
+]]></programlisting>
+
+      <para>Creates a &staticterm; which holds a free variable.
+      </para>
+
+<programlisting
+><![CDATA[StaticTerm::StaticTerm(const char*);
+]]></programlisting>
+
+      <para>Creates a &staticterm; which automatically initialises and
+        reinitialises itself from the string representation provided as the
+        argument, when the Prolog engine is started or restarted. The
+        string is meant to be a string literal. It must remain valid, and
+        there is no memory management performed by &staticterm;.
+      </para>
+
+      <para>Changing the term stored as a recorded term via
+        <literal>operator = (Term)</literal> has no effect on the next
+        reinitialisation of the &recordedterm;. However, a new
+        initialisation string may be provided via <literal>operator =
+        (const char*)</literal>.
+      </para>
+
+<programlisting
+><![CDATA[void StaticTerm::operator = (const char*)
+]]></programlisting>
+
+      <para>Replace the initialisation string, such that the new one will
+        be used when the Prolog engine is restarted. The string must remain
+        valid, and its memory isn't managed by the &staticterm; (no
+        ownership taken).
+      </para>
+
+<programlisting
+><![CDATA[void StaticTerm::swap(StaticTerm&);
+]]></programlisting>
+
+      <para>Make the two &staticterm;s change contents, including the
+        initialisation strings. Fast operation.
+      </para>
+
+<programlisting
+><![CDATA[void StaticTerm::duplicate(const StaticTerm&);
+]]></programlisting>
+
+      <para>Make the object a copy of the argument. Same as
+        <literal>RecordedTerm::duplicate</literal>, but also affects the
+        initialisation string.
+      </para>
+
+<programlisting
+><![CDATA[Term StaticTerm::term();
+operator StaticTerm::Term ();
+void StaticTerm::operator = (Term);
+void StaticTerm::clear();
+
+bool StaticTerm::operator == (const StaticTerm&) const;
+bool StaticTerm::operator != (const StaticTerm&) const;
+
+bool StaticTerm::operator >  (const StaticTerm&) const;
+bool StaticTerm::operator <  (const StaticTerm&) const;
+bool StaticTerm::operator >= (const StaticTerm&) const;
+bool StaticTerm::operator <= (const StaticTerm&) const;
+]]></programlisting>
+
+      <para>These are the same as for <link linkend="recordedterm">&recordedterm;</link>.
+      </para>
+
+    </section>
+
+    <section>
+      <title>&term;</title>
+
+      <para>This is the most important class. A &term; behaves (mostly) like a
+        pointer into a global graph of term components. This is discussed
+        in detail in <xref linkend="tgtcg"/>.
+      </para>
+
+      <para>&term; is a model of &concepta; and of &conceptdc;. After you
+        assign a &term; to another one, both point to the same term.
+      </para>
+
+      <para>&term; also has the comparision operators defined. But it is
+        <emphasis>not</emphasis> a model of either &conceptec; or
+        &conceptltc;, because the comparisions operate on the terms pointed
+        to, not on the pointers. (Actually, because of the way SWI-Prolog
+        works, it is not possible to define comparisions which
+        compare the conceptual pointers).
+      </para>
+
+      <para>This means that you can't use &term; as a parameter for a template
+        which requires it to be a model of &conceptec; or &conceptltc;. For
+        instance, &term;s can't be used as key for sorted containers. [ If
+        &term;s are used in such a way that they have the semantics of
+        terms (not term pointers), then this might still be possible. But
+        you would need to either restrict yourself to ground terms or
+        interpret variables as standing for themselves. Be sure you know
+        what you're doing. ]
+      </para>
+
+      <para>Every &term; belongs to a frame. Unless initialized in an
+        assignment (by the copy constructor), it always starts in the
+        current frame. If a &term; is assigned another one, then it
+        <quote>migrates</quote> to the frame of that term, unless
+        <literal>Term::assign()</literal> is used.
+      </para>
+
+<programlisting
+><![CDATA[Term::Term();
+]]></programlisting>
+
+      <para>Create a new term which consists of a free variable, and make
+        the new &term; point to it. It belongs to the current frame.
+      </para>
+
+<programlisting
+><![CDATA[template <typename ForwardIterator>
+Term::Term(const char* functor_name, ForwardIterator begin, ForwardIterator end);
+
+template <typename ForwardIterator>
+Term::Term(string functor_name, ForwardIterator begin, ForwardIterator end);
+
+template <typename ForwardIterator>
+Term::Term(Functor functor, ForwardIterator begin, ForwardIterator end);
+]]></programlisting>
+
+      <para>Create a new term from a functor and a STL-style sequence. The
+        type of the values of the sequence can be &term;, or any type which
+        can be converted to &term;. For the first two constructors, the
+        arity is not needed. It is taken from the length of the sequence.
+        In the third constructor, a &logicerror; exception is raised of the
+        length of the sequence and the arity of the functor don't match.
+        The new &term; belongs to the current frame.
+      </para>
+
+<programlisting
+><![CDATA[Term::Term(const long &);
+Term::Term(const int &);
+Term::Term(const double &);
+Term::Term(void * const &);
+]]></programlisting>
+
+      <para>Create a new term containing the argument, and make the new
+        &term; point to it. It belongs to the current frame.
+      </para>
+
+<programlisting
+><![CDATA[Term::Term(const Atom &);
+]]></programlisting>
+
+      <para>Create a new term which consists of the atom, and make the new
+        &term; point to it.
+      </para>
+
+<programlisting
+><![CDATA[Term::Term(const Functor &);
+]]></programlisting>
+
+      <para>Create a new term which consists of the functor and free
+        variables. Make the new &term; point to it.
+      </para>
+
+<programlisting
+><![CDATA[Term::Term(const char *);
+Term::Term(const string &);
+]]></programlisting>
+
+      <para>Parse the text and create a new term from it. If the text is
+        not well-formed, a &parseerror; exception is raised. Make the new &term;
+        point to it. Use <literal>Term(Atom(text))</literal> instead, if
+        you wish to create a term which contains an atom which is the text. The new &term;
+        belongs to the current frame.
+      </para>
+
+<programlisting
+><![CDATA[template <typename InputIterator>
+Term::Term(InputIterator begin, InputIterator end);
+]]></programlisting>
+
+      <para>Create a new term containing a Prolog list. The arguments
+        specify an STL-style sequence. The value type of
+        <literal>InputIterator</literal> must be convertible to &term;. The
+        new &term; belongs to the current frame.
+      </para>
+
+<programlisting
+><![CDATA[
+template <typename TargetType, class OutputIterator>
+OutputIterator Term::copy_list(OutputIterator);
+]]></programlisting>
+
+      <para>Assume the term is a Prolog list. Write its contents to the
+        output iterator, converting each element to
+        <literal>TargetType</literal>. The template parameter
+        <literal>OutputIterator</literal> can be infered, but
+        <literal>TargetType</literal> can't. So this template method is
+        called with one template parameter, like
+        <quote><literal>t.copy_list&lt;int&gt;(it)</literal></quote>.
+      </para>
+
+      <para>(The target type can't be infered from the iterator
+        type, because STL output iterators don't have value types. The same
+        output iterator can be able to absorb values of several differnt types.)
+      </para>
+
+      <para>The following paragraphs are relevant only if you want to
+        use <literal>copy_list</literal> to convert the element
+        terms to C strings (<literal>char*</literal> or <literal>const
+        char*</literal>).
+      </para>
+
+      <para><literal>copy_list&lt;&gt;</literal> has a different meaning
+        for the target type <literal>char*</literal> than for other types -
+        it doesn't write the values to the output iterator, but pointers to
+        them. The values themselves are on the heap, and must be deleted
+        later.
+      </para>
+
+      <para>The default conversion of terms to <literal>char*</literal> isn't
+        applicable, because it wouldn't copy the strings to the C++ heap,
+        but leave them in a SWI-Prolog managed ring buffer, which is 16
+        entries large. Therefore <literal>copy_list&lt;&gt;</literal> is
+        specialised for the target type <literal>char*</literal>, such that
+        the strings are copied to the heap. The follwoing is an example of
+        how to use <literal>copy_list&lt;&gt;</literal>.
+      </para>
+
+<programlisting
+><![CDATA[void delete_cstr(char* p) { delete p; }
+
+// ...
+
+  Term t = "[this, is, a, list(of(terms))]";
+  vector<char*> v;
+  t.copy_list<char*>(back_inserter(v));
+
+  cout << "contents of the vector: ";
+  copy(v.begin(), v.end(), ostream_iterator<char*>(cout," "));
+  cout << endl;
+
+  for_each(v.begin(), v.end(), delete_cstr);
+]]></programlisting>
+
+      <para><literal>copy_term&lt;&gt;</literal> is
+        <emphasis>not</emphasis> specialised for <literal>const
+        char*</literal>, because copying the strings to the heap and then
+        returning a <literal>const</literal> pointer, which can't be used
+        to delete it, would result in a memory leak. The default conversion
+        returns pointers which point to memory managed by the SWI-Prolog
+        ring buffer, which is 16 entries large. So only lists up to 16
+        elements can be converted by <literal>copy_list&lt;const
+        char*&gt;()</literal>.
+      </para>
+
+<programlisting
+><![CDATA[Term::operator long () const;
+Term::operator int () const;
+Term::operator double () const;
+Term::operator void* () const;
+]]></programlisting>
+
+      <para>Assume the term consists of a value of the respective type, and
+        return that value. Throw a &conversionerror; excpetion, if the term
+        can't be converted to the target type.
+      </para>
+
+<programlisting
+><![CDATA[Term::operator Atom () const;
+]]></programlisting>
+
+      <para>Assume the term consists of an atom, and return it. Throw a
+        &conversionerror; exception, if it doesn't consist of an atom.
+      </para>
+
+<programlisting
+><![CDATA[Term::operator const char* () const;
+]]></programlisting>
+
+      <para>Convert the term to a string, using
+        <link
+        linkend="term__to_str"><literal>Term::to_str()</literal></link>
+        with the default options. The returned pointer points to memory
+        managed by the Prolog engine. If the term consists solely of an
+        atom, then this is static memory which remains valid (at least as
+        long as the atom exists). Otherwise it is in a ring buffer, which
+        will eventually be deallocated. The string must be copied if it is
+        to be used other than short-term. (See
+        <literal>PL_get_chars()</literal> in the &srm; - <quote>if the data
+        is not static (as from an atom), the data is copied to the next
+        buffer from a ring of 16 buffers</quote>).
+      </para>
+
+      <para>There is no <literal>Term::operator string</literal>, because
+        C++ strings can be created via <literal>operator const char*
+        ()</literal>, and adding an <literal>operator string ()</literal>
+        would make the conversion ambigious. Use
+        <literal>Term::to_string()</literal> for a slightly more
+        efficient conversion to <literal>string</literal>.
+      </para>
+
+<programlisting
+><![CDATA[template <typename T> Term::operator list<T> () const;
+]]></programlisting>
+
+      <para>Assume the term is a Prolog list of values which can be
+        converted to <literal>T</literal>. Convert the term to a
+        <literal>list&lt;T&gt;</literal>. If the term can't be converted
+        this way, a &conversionerror; exception is thrown.
+      </para>
+
+      <para>This template is specialized for <literal>char*</literal>,
+        copying the strings to the C++ heap instead of using the ring
+        buffer, like the default conversion would do. You are responsible
+        for eventually deleting them. Consider using
+        <literal>list&lt;string&gt;</literal> instead.
+      </para>
+
+      <para>Using <literal>operator list&lt;const char*&gt;</literal> is
+        probably an error. The strings can't be copied to the heap, because
+        they could not be be deleted via the <literal>const char*</literal>
+        pointers. They are left in the SWI-Prolog managed ring buffer of 16
+        entries. Therefore only lists up to 16 elements long can be
+        converted this way. Use <literal>operator list&lt;string&gt;</literal>
+        instead.
+      </para>
+
+      <para>Use <literal>Term::copy_list&lt;&gt;()</literal> in order to
+        store a Prolog list in a different type of container.
+      </para>
+
+<anchor id="term__to_str"/><programlisting
+><![CDATA[static const unsigned Term::default_cvt_flags = CVT_WRITE|CVT_VARIABLE;
+
+char*  Term::to_str   (unsigned flags = default_cvt_flags) const;
+string Term::to_string(unsigned flags = default_cvt_flags) const;
+]]></programlisting>
+
+      <para>This are the conversions of terms to strings, as provided by the
+        &fli; function <literal>PL_get_chars()</literal>. The flags specify
+        what kinds of terms should be converted. If the term isn't of such
+        a kind, then a &cvterror; exception is raised. The flags are
+        (mostly...) documented in the &srm;.
+      </para>
+
+      <para>The pointer returned by
+        <literal>to_str()</literal> points to memory managed by the Prolog
+        engine. If the term consists solely of an atom, then this is static
+        memory which remains valid (at least as long as the atom exists).
+        Otherwise it is in a ring buffer, which will eventually be
+        deallocated. The string must be copied if it is to be used other
+        than short-term. (See <literal>PL_get_chars()</literal> in the
+        &srm; - <quote>if the data is not static (as from an atom), the
+        data is copied to the next buffer from a ring of 16
+        buffers</quote>).
+      </para>
+
+<programlisting
+><![CDATA[Term::Term(const Term& t2);
+Term& Term::operator = (const Term& t2);
+void Term::swap(Term& t);
+]]></programlisting>
+
+      <para>These implement the concept &concepta;, except for the frame
+        membership. The assignment and the copy constructor make the new
+        term belong to the frame of t2. The <literal>swap</literal> method
+        makes the two terms change frames. See <xref linkend="frfrm"/> for a detailed
+        discussion of frame membership.
+      </para>
+
+<programlisting
+><![CDATA[bool Term::operator == (const Term&) const;
+bool Term::operator != (const Term&) const;
+bool Term::operator >  (const Term&) const;
+bool Term::operator <  (const Term&) const;
+bool Term::operator >= (const Term&) const;
+bool Term::operator <= (const Term&) const;
+]]></programlisting>
+
+      <para>These operators compare two terms in standard term order. They
+        do not compare the pointers which the &term; objects conceptually
+        are.
+      </para>
+
+<anchor id="term__unify"/><programlisting
+><![CDATA[template <typename T>
+bool Term::unify(const T&) const;
+]]></programlisting>
+
+      <para>Unify the two terms. Returns <literal>true</literal> of successful.
+      </para>
+
+<programlisting
+><![CDATA[Term Term::operator [] (int n) const;
+]]></programlisting>
+
+      <para>Get the n-th subterm of the term. n starts at zero. Raises a
+        &logicerror; exception if the term is not compound, or the index is
+        outside the range 0..arity-1.
+      </para>
+
+<programlisting
+><![CDATA[Functor Term::functor() const;
+]]></programlisting>
+
+      <para>Get the functor of the term. An atom counts as a functor with
+        arity zero. Raises a &conversionerror; exception if the term is neither compound
+        nor an atom.
+      </para>
+
+<programlisting
+><![CDATA[TermType Term::type() const;
+]]></programlisting>
+
+      <para>Return the type of the term, which is one of the enumeration
+        values of <link linkend="termtype">&termtype;</link>.
+      </para>
+
+<programlisting
+><![CDATA[void Term::copy();
+]]></programlisting>
+
+      <para>Make a deep copy of the term, and make the &term; object to the
+        new term. If the old term shares any parts with other terms, this
+        will no longer be the case for the copy.
+      </para>
+
+<programlisting
+><![CDATA[void Term::assign(Term);
+]]></programlisting>
+
+      <para><literal>t1.assign(t2)</literal> makes <literal>t1</literal>
+        point to the same term as t2, in such a way that (unlike
+        <literal>t1 = t2</literal>) <literal>t1</literal> does not migrate
+        to the frame of <literal>t2</literal>. Apart from this, it does the
+        same as an ordinary assignment, <emphasis>provided</emphasis> you
+        guarantee that there exists only one copy of <literal>t1</literal>.
+        If this is not the case, you will break the pointer semantics of
+        &term;. <emphasis>Use with care!</emphasis> See <xref
+        linkend="frfrm"/> for a detailed discussion.
+      </para>
+
+<programlisting
+><![CDATA[string Term::to_external();
+static Term Term::from_external(string);
+]]></programlisting>
+
+      <para>The first one converts the term to its external representation, as described
+        in the &srm;. The second one creates a new term from an external
+        representation. If this fails, a &formaterror; exception is raised.
+      </para>
+
+      <blockquote>
+        <attribution>The SWI-Prolog 4.0.9 Reference Manual, in section 5.6.11.2
+        </attribution>
+
+        <para>The returned data [the external representation] has
+          properties that enable storing the data
+          on an external device. It has been designed to make it possible to
+          store Prolog terms fast an compact in an external database. Here
+          are the main features:
+        </para>
+
+        <itemizedlist><!-- bug in Norman Walsh's Docbook-XSL-stylesheets:
+                           variablelist does not work here -->
+          <listitem>
+            <formalpara><title>Independent of session</title>
+            Records can be communicated to another
+              Prolog session and made visible using
+              PL_recorded_external().</formalpara>
+          </listitem>
+
+          <listitem>
+            <formalpara><title>Binary</title>
+            The representation is binary for maximum
+              performance. The returned data may contain
+              0-bytes.</formalpara>
+          </listitem>
+
+          <listitem>
+            <formalpara><title>Byte-order independent</title>
+            The representation can be transferred
+              between machines with different
+              byte-order.</formalpara>
+          </listitem>
+
+          <listitem>
+            <formalpara><title>No alignment restrictions</title>
+            There are no memory alignment restrictions
+              and copies of the record can thus be moved freely. For
+              example, it is possible to use this representation to
+              exchange terms using shared memory between different Prolog
+              processes. </formalpara>
+          </listitem>
+
+          <listitem>
+            <formalpara><title>Compact</title>
+            It is assumed that a smaller memory
+              footprint will eventually outperform slightly faster
+              representations.</formalpara>
+          </listitem>
+
+          <listitem>
+            <formalpara><title>Stable</title>
+            The format is designed for future
+              enhancements without breaking compatibility with older
+              records.</formalpara>
+          </listitem>
+        </itemizedlist>
+      </blockquote>
+
+    </section>
+
+    <section id="termtype">
+      <title>&termtype;</title>
+
+      <para>This is an enumeration of the types of a term, as defined
+        by Prolog.
+      </para>
+
+      <informaltable>
+      <tgroup cols="2">
+      <tbody>
+      <row><entry><literal>tt_variable</literal></entry>
+           <entry>a free variable</entry></row>
+      <row><entry><literal>tt_atom</literal></entry>
+           <entry>an atom</entry></row>
+      <row><entry><literal>tt_string</literal></entry>
+           <entry>a Prolog string</entry></row>
+      <row><entry><literal>tt_integer</literal></entry>
+           <entry>an integer</entry></row>
+      <row><entry><literal>tt_float</literal></entry>
+           <entry>a floating point number</entry></row>
+      <row><entry><literal>tt_compound</literal></entry>
+           <entry>a compound term</entry></row>
+      </tbody>
+      </tgroup>
+      </informaltable>
+    </section>
+
+    <section>
+      <title>&foreignpredicate;</title>
+    </section>
+    </section> <!-- Classes -->
+
+    <section>
+      <title>Exceptions</title>
+
+<programlisting
+><![CDATA[struct PlError
+{
+  virtual Term   as_term() const = 0;
+  virtual string message() const = 0;
+};
+]]></programlisting>
+
+      <para>This is the base class of all exceptions raised by &swipcpp;.
+      The <literal>as_term()</literal> method is used to convert the
+      exception to a Prolog exception, which is a term. When it is raised
+      withing a foreign predicate, this is used to hand it over to the
+      Prolog engine. <literal>message()</literal> produces an error
+      message.
+      </para>
+
+      <para>Most of the following exception classes have a
+      <literal>place</literal> attribute. It contains the method or
+      function in which the exception was raised.
+      </para>
+
+<programlisting
+><![CDATA[class PrologException : public PlError
+{
+public:
+  PrologException(Term);
+  Term   as_term() const;
+  string message() const;
+};
+]]></programlisting>
+
+      <para>This is the C++ version of a Prolog exception, which has been
+      raised in a query. It is packaged as a
+      <literal>PrologException</literal> by
+      <literal>Query::next()</literal>, and thrown as a C++ exception.
+      </para>
+
+<anchor id="unsafeprologexception"/><programlisting
+><![CDATA[class UnsafePrologException : public PrologException
+{
+  Term ex;
+public:
+  UnsafePrologException(Term e) : ex(e) {}
+
+  Term   as_term() const;
+  string message() const;
+
+  void PL_raise_exception() {
+    PL_raise_exception(ex.lsi);
+  }
+}
+]]></programlisting>
+
+      <para>This is thrown instead of &prologexception; if the
+        <link linkend="unsafe_exceptions"><literal>unsafe_exceptions</literal></link>
+        flag of &query; is used. The method <literal>PL_raise_exception()</literal> is
+        for experts of the &fli; only. Quoting Jan Wielemaker from a mail:
+        <quote>After <literal>PL_raise_exception()</literal> the term
+        itself is bound to a very old (and thus long living) reserved
+        term-reference as well. This is the term-reference returned by
+        <literal>PL_exception()</literal>.</quote>
+      </para>
+
+<programlisting
+><![CDATA[struct LogicError : public PlError
+{
+  const char* place;
+  const char* msg;
+  LogicError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message() const;
+};
+]]></programlisting>
+
+      <para>This indicates a bug in the program.
+      </para>
+
+<programlisting
+><![CDATA[struct FormatError : public PlError
+{
+  const char* place;
+  const char* msg;
+  FormatError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message() const;
+};
+]]></programlisting>
+
+      <para>This indicates malformed data. It is currently only thrown by
+      <literal>Term::from_external()</literal>.
+      </para>
+
+<programlisting
+><![CDATA[struct ParseError : public PlError
+{
+  const char* place;
+  const char* text;
+  ParseError(const char* p, const char* t) : place(p), text(t) {}
+  Term   as_term() const;
+  string message() const;
+};
+]]></programlisting>
+
+      <para>An error parsing the specified text, which should contain a
+      term. Thrown by <literal>Term::Term(const char*)</literal> and
+      <literal>Term::Term(string)</literal>.
+      </para>
+
+<programlisting
+><![CDATA[struct ConversionError : public PlError
+{
+  const char* place;
+  const char* msg;
+  ConversionError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message() const;
+};
+]]></programlisting>
+
+      <para>This indicates a failed conversion between two of &swipcpp;s
+      data types; mostly from or to &term;. For instance, it will be thrown
+      when trying to convert a compound term to an integer.
+      </para>
+
+<programlisting
+><![CDATA[struct CvtError : public ConversionError
+{
+  CvtError(const char* p)
+    : ConversionError(p, "not to be converted") {}
+  Term   as_term() const;
+};
+]]></programlisting>
+
+      <para>This indicates failure to represent a term as a string. The
+      flags argument of <literal>Term::to_str()</literal> and
+      <literal>Term::to_string()</literal> indicates what kinds of terms
+      should be converted. If the given term is not of such a type, then
+      this exception is thrown. XXX
+      </para>
+
+<programlisting
+><![CDATA[struct GeneralError : public PlError
+{
+  const char* place;
+  const char* msg;
+  GeneralError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message();
+};
+]]></programlisting>
+
+      <para>This can only be thrown by <literal>prolog_init()</literal>, in
+      case of failed initialisation. See <xref linkend="startstop"/>.
+      </para>
+    </section>
+
+  </chapter>
+
+  <chapter>
+    <title>Implementation Notes</title>
+
+      <para>This chapter discusses various implementation aspects of
+        &swipcpp;. It is meant for people who want to maintain or improve
+        it, or just want to understand the source code. Normal users of the
+        interface do not need these notes.
+      </para>
+
+    <section id="memman">
+      <title>SWI-Prolog Memory Management</title>
+
+      <itemizedlist>
+
+        <listitem>
+          <para>All new term references are created on the local stack. When
+            a foreign predicate returns, or a frame is left, these references
+            are invalidated. So all terms created have a limited life time.
+            In order to use them as global data on the C++ side, they must be
+            saved somehow.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>Most actions, such as creating terms, require the prolog
+            engine to run. ...
+          </para>
+        </listitem>
+
+      </itemizedlist>
+
+    </section>
+
+    <section id="termsemantics">
+      <title>Semantics of &term; Objects</title>
+
+      <para>The only way to refer to terms are by &termt; values, as
+        provided by the &fli;. A &termt; is an index on the local stack.
+        The stack cells are like pointers to terms. So a &termt; has the
+        semantics of a pointer to pointers to terms (not of a pointer to
+        terms). This means that, as well as the terms pointed to, the local
+        stack cells can change. For instance:
+      </para>
+
+      <programlisting
+>// create two term_t's pointing to the term "42"
+term_t t1 = PL_new_term_ref();
+term_t t2 = t1;
+PL_put_integer(t1, 42);
+
+// change one
+PL_put_atom_chars(t1, "hello");
+
+// now both term_t's point to "hello"
+</programlisting>
+
+      <para>The most direct way would be to encapsulate a &termt; in a class
+        &term; and to define appropriate operators and methods for it. This
+        would give &term;s the semantics of being pointers to pointers
+        to terms, too. The programmer would have to manually create stack
+        cells and deal with pointers to them, just like in the C language &fli;
+      </para>
+
+      <para>This makes working with terms unnecessarily tedious, error prone
+        and complex. It is possible to transparently handle the enclosed
+        &termt;s in such a way that &term; objects have the semantics of
+        pointers to terms instead, which allows for a much more intuitive,
+        direct programming style. There are two ways to accomplish this.
+      </para>
+
+      <orderedlist>
+
+          <para>Never change stack cells once they are initialised. Several
+            &term; objects may refer the same stack cell. When a &term; is
+            copied or assigned to another one, we can simply copy the local
+            stack indexes.
+          </para>
+
+
+          <para>Ensure each &term; object has its own stack cell. That is, no
+            two &term; objects encapsulate the same local stack index. When a
+            &term; is copied or assigned to another one, we use
+            <literal>PL_copy_term_ref()</literal> or
+            <literal>PL_put_term()</literal> to create a new stack cell which
+            refers the same term as the existing one.
+          </para>
+
+      </orderedlist>
+
+      <para>The first approach has the advantage that it is efficient. A
+        &term; object structurally consists only of a &termt; attribute,
+        which is copied and passed around just like in the C interface (all
+        the methods are inline).
+      </para>
+
+      <para>However, it badly interacts with frames. Leaving a frame
+        invalidates stack cells. Since the stack cell a &term; uses, changes
+        with each assignment to it, it is hard to predict which &term;s wiil
+        be invalidated.
+      </para>
+
+<programlisting
+>Term t1;
+{
+  Frame f;
+  Term t2(42);
+  t1 = t2;
+}
+// now t1 _and_ t2 are invalid
+</programlisting>
+
+      <para>Even worse, it's impossible to save references to terms created
+        inside a frame, like you can when using the C interface.
+      </para>
+
+<programlisting
+>term_t t1 = PL_new_term_ref();
+
+  fid_t f = PL_open_foreign_frame();
+  term_t t2 = PL_new_term_ref();
+  // ... create data and make t2 point to it ...
+
+  // save reference in t1 before t2 is lost, and close frame
+  PL_put_term(t1, t2);
+  PL_close_foreign_frame(f);
+
+// now t2 is invalid, but t1 points to the data
+</programlisting>
+
+      <para>These frame related problems don't occur with the second
+        approach. But it would make using &term; objects quite inefficient.
+        Every time you pass a &term; by value, PL_copy_term_ref() is called,
+        and a stack cell is consumed. This would in effect force you to use
+        references or pointers to &term;s instead, making you unable to use
+        &term;s the way they are supposed to, like pointers.
+      </para>
+
+      <para>It is legal to write to a stack cell, provided the &term; holding
+        it is the only one to do so. The changing of the cell will not affect
+        any other &term;s as well.
+      </para>
+
+      <para>
+      </para>
+
+      - nur beim Erzeugen neuer Terme werden Kellerzellen angelegt
+
+    </section>
+
+
+    <section id="initqueue"><title>Init Queues</title>
+
+      <para>The <quote>static</quote> classes automatically (re)initialise
+        themselves. In order to be notfied when this is necessary, they
+        derive protectely from the class <literal>Init</literal>, which
+        makes them members of an init queue.
+      </para>
+
+      <para>Init queue members have two methods, <literal>thaw()</literal>
+        and <literal>freeze()</literal>. They get thawed when they need to
+        be initialised, and frozen when they need to save some state. There
+        are two init queues. All members are thawed/frozen on certain
+        occasions.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>The <emphasis>engine queue</emphasis> is thawed when the
+            Prolog engine has been initialised. This causes the
+            <literal>Static...</literal> class objects to initialise
+            themselves as well. It is frozen, before it goes down.
+          </para>
+        </listitem>
+        <listitem>
+          <para>One <emphasis>frame queue</emphasis> per frame. It gets
+            frozen when the frame goes out of scope. It doesn't cause any
+            thawing. The objects need to check for themselves. This queue
+            is only used by &staticquery;.
+          </para>
+        </listitem>
+      </itemizedlist>
+
+      <para>When an object is enqueued in the engine queue, and the engine
+        is already running, it is thawed immediately by calling the
+        <literal>thaw()</literal> method. The object initialises itself in
+        frozen state. Then it enqueues itself and maybe get thawed
+        immediately.
+      </para>
+
+      <para>This means that the class <literal>Init</literal> part of the
+        object need to be created last. Its initialisation doesn't take
+        part in its constructor, but is defered, and explicitly called from
+        inside the larger object's constructor.
+      </para>
+
+      <para>The class <literal>Init</literal> looks like this.
+      </para>
+
+<programlisting
+><![CDATA[struct Init
+{
+  Init*  next;    // next queue element
+  Init** prev;    // pointer to pointer pointing to this element
+
+  Init(Defer);    // no initialisation (enqueueing) yet
+
+  // initialisation takes place here
+  void enqueue(Init** queue);
+
+  ~Init();        // dequeue oneself
+
+  virtual void thaw() = 0;
+  virtual void freeze() = 0;
+
+  void thaw_all();     // thaw entire queue starting here
+  void freeze_all();   // freeze entire queue starting here
+};
+]]></programlisting>
+
+    </section>
+
+    <section id="fopre">
+      <title>Foreign Predicates</title>
+
+      <para>SWI-Prolog has two methods of calling foreign functions, and two
+        corresponding kinds of signatures. Both of them use the C interface
+        types, such as <literal>foreign_t foo(term_t, term_t)</literal>. We
+        want to interface to functions like <literal>bool foo(Term,
+          Term)</literal>, and translate Prolog exceptions to C++ exceptions
+        and vice versa. So wee need wrapper functions which comply to the C
+        signatures, do the conversions and translations, and call the C++
+        functions. It does not seem to be possible to determine the
+        name/arity of the predicate being called inside some generic
+        function, so we need one real wrapper function per foreign predicate.
+      </para>
+
+      <para>Such wrapper functions could be automatically generated with the
+        help of templates. The templates would look like this.
+      </para>
+
+<programlisting><![CDATA[template <bool (*Fkt)()>
+foreign_t fp_helper()
+{
+  try {
+    return (Fkt() ? TRUE : FALSE);
+  } catch (const char* ex) {
+    return PL_raise_exception(Term(Atom(ex)).lsi);
+  }
+}
+
+template <bool (*Fkt)(Term)>
+foreign_t fp_helper(term_t t1)
+{
+  try {
+    return (Fkt(Term(t1)) ? TRUE : FALSE);
+  } catch (const char* ex) {
+    return PL_raise_exception(Term(Atom(ex)).lsi);
+  }
+}
+
+template <bool (*Fkt)(Term, Term)>
+foreign_t fp_helper(term_t t1, term_t t2)
+{
+  try {
+    return (Fkt(Term(t1, t2)) ? TRUE : FALSE);
+  } catch (const char* ex) {
+    return PL_raise_exception(Term(Atom(ex)).lsi);
+  }
+}
+
+// and so on
+]]></programlisting>
+
+      <para>Alas, GCC bugs prevent this. It seems like it's impossible to
+        take the address of a template function. For now, we use macros
+        instead. We also need to use the other calling convention, which
+        leads to the current implementation.
+      </para>
+
+    </section>
+
+    <section id="implframes">
+      <title>Frames</title>
+
+      <para>Only terms (&term; and its variants &recordedterm; and
+        &staticterm;) are affected by frames. All the other things (atoms,
+        functors, foreign predicates and so on) live as long as the engine.
+      </para>
+
+      <para>A frame going out of scope has two effects. First, all bindings
+        done inside it are undone. This can potentially affect all terms, but
+        they stay valid. Second, all local stack indices created inside the
+        frame, ald all &term;s using them are invalidated. There is an
+        implicit frame, in which every foreign predicate invocation runs.
+        Explicit frames can be created with the &frame; class as well.
+      </para>
+
+      <para>There is no way to rescue term references from being invalidated
+        once a frame is entered. You can only create free variables before the
+      </para>
+
+      <para>Leaving a frame invalidates the &term; parts of &recordedterm;s
+        and &staticterm;s. There are no special measures to take for &term;s.
+        They just become invalid and must not be used any longer. The other
+        two, however, are supposed to survive.
+      </para>
+
+      <para>An automatic wakeup feature for &recordedterm; shoed not to be
+        feasible, because you can't keep track of which frame the &term;
+        part of a &recordedterm; belongs to. The &recordedterm; can't know
+        when its &term; part becomes invalid.
+      </para>
+
+    </section>
+
+    <section>
+      <title>Queries</title>
+
+      <para>The following components are require by the &fli; in order to
+        execute a query.
+      </para>
+
+      <itemizedlist>
+        <listitem> <para> a context module identifier </para> </listitem>
+        <listitem> <para> an array of term references for the arguments </para> </listitem>
+        <listitem> <para> a predicate identifier </para> </listitem>
+      </itemizedlist>
+
+      <para>A &query; packages just that. The term references array is
+        reused. It does not do any re-initialising like the
+        <literal>Static</literal>... classes. When the frame in which the
+        query was created is left, the term references, and so the query is
+        invalidated.
+      </para>
+
+      <para>A &staticquery; additionally has the follwoing components.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para> A &recordedterm; attribute <literal>callterm</literal>.
+            This stores predefined subterms of the query predicate
+            (arguments for an ordinary &query;), and has the actual
+            arguments as crosswise bound variables, like
+            <literal>args(arg1(foo(X),_),bar(Y), X,Y)</literal>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+          </para>
+        </listitem>
+      </itemizedlist>
+
+      <para>A &staticquery; reinitialises itself in two differerent ways,
+        and needs to be member of both init queues. Because it can be a
+        subclass of <literal>Init</literal> only once, the engine queue
+        membership is implemented by an attribute.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>When the frame is closed, the array of term
+            references for the query arguments is invalidated. The
+            <literal>freeze()</literal> is used to reset the
+            <literal>predargs</literal> attribute, so it can later be
+            reinitialised.
+          </para>
+        </listitem>
+        <listitem>
+          <para>When the engine is initialised, the &staticquery; object
+            does its full initialisation. When the engine does down, it
+            takes notice, so it can reinitialse later.
+          </para>
+        </listitem>
+      </itemizedlist>
+
+      <para>
+      </para>
+
+    </section>
+  </chapter>
+
+</book>

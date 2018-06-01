@@ -1,0 +1,2311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
+<title>Manual for SwiProlog-C++ 0.1.0</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.40">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" id="id2704362">
+<div class="titlepage">
+<div><h1 class="title">
+<a name="id2704362"></a>Manual for SwiProlog-C++ 0.1.0</h1></div>
+<div><h3 class="author">Volker Wysk</h3></div>
+<div><p class="pubdate">2002-01-14</p></div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt>1 <a href="#intro">Introduction</a>
+</dt>
+<dd><dl>
+<dt> <a href="#id2705734">Status</a>
+</dt>
+<dt> <a href="#id2704636">Requirements</a>
+</dt>
+</dl></dd>
+<dt>2 <a href="#userguide">User Guide</a>
+</dt>
+<dd><dl>
+<dt> <a href="#tgtcg">The Global Term Components Graph</a>
+</dt>
+<dt> <a href="#id2704890">Initialisation</a>
+</dt>
+<dt> <a href="#id2704740">Working With Terms</a>
+</dt>
+<dt> <a href="#frfrm">Frames and Frame Membership</a>
+</dt>
+<dt> <a href="#fopre">Foreign Predicates</a>
+</dt>
+<dt> <a href="#cam">Concepts and Models</a>
+</dt>
+<dd><dl>
+<dt> <a href="#concepta">Assignable</a>
+</dt>
+<dt> <a href="#conceptdc">Default Constructible</a>
+</dt>
+<dt> <a href="#conceptec">Equality Comparable</a>
+</dt>
+<dt> <a href="#conceptltc">Less Than Comparable</a>
+</dt>
+</dl></dd>
+</dl></dd>
+<dt>3 <a href="#reference">Reference</a>
+</dt>
+<dd><dl>
+<dt> <a href="#startstop">Starting and Restarting the Prolog Engine</a>
+</dt>
+<dt> <a href="#id2699801">Global Functions and Operators</a>
+</dt>
+<dd><dl>
+<dt> <a href="#id2699809"><tt>unify</tt></a>
+</dt>
+<dt> <a href="#id2705506">Comparision Operators</a>
+</dt>
+<dt> <a href="#id2699852"><tt>atom_to_term</tt></a>
+</dt>
+</dl></dd>
+<dt> <a href="#id2699954">Types</a>
+</dt>
+<dd><dl>
+<dt> <a href="#atom"><tt>Atom</tt></a>
+</dt>
+<dt> <a href="#id2700036"><tt>Frame</tt></a>
+</dt>
+<dt> <a href="#id2700094"><tt>Functor</tt></a>
+</dt>
+<dt> <a href="#id2700153"><tt>Module</tt></a>
+</dt>
+<dt> <a href="#id2700722"><tt>Predicate</tt></a>
+</dt>
+<dt> <a href="#query"><tt>Query</tt></a>
+</dt>
+<dt> <a href="#recordedterm"><tt>RecordedTerm</tt></a>
+</dt>
+<dt> <a href="#id2763384"><tt>StaticAtom</tt></a>
+</dt>
+<dt> <a href="#id2763431"><tt>StaticFunctor</tt></a>
+</dt>
+<dt> <a href="#id2763485"><tt>StaticPredicate</tt></a>
+</dt>
+<dt> <a href="#id2763532"><tt>StaticQuery</tt></a>
+</dt>
+<dt> <a href="#id2763781"><tt>StaticTerm</tt></a>
+</dt>
+<dt> <a href="#id2764013"><tt>Term</tt></a>
+</dt>
+<dt> <a href="#termtype">TermType</a>
+</dt>
+<dt> <a href="#id2765346"><tt>ForeignPredicate</tt></a>
+</dt>
+</dl></dd>
+<dt> <a href="#id2765359">Exceptions</a>
+</dt>
+</dl></dd>
+<dt>4 <a href="#id2765677">Implementation Notes</a>
+</dt>
+<dd><dl>
+<dt> <a href="#memman">SWI-Prolog Memory Management</a>
+</dt>
+<dt> <a href="#termsemantics">Semantics of <tt>Term</tt> Objects</a>
+</dt>
+<dt> <a href="#initqueue">Init Queues</a>
+</dt>
+<dt> <a href="#fopre">Foreign Predicates</a>
+</dt>
+<dt> <a href="#implframes">Frames</a>
+</dt>
+<dt> <a href="#id2766350">Queries</a>
+</dt>
+</dl></dd>
+</dl>
+</div>
+<div class="chapter">
+<div class="titlepage"><div><h2 class="title">
+<a name="intro"></a>Chapter 1. Introduction</h2></div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt> <a href="#id2705734">Status</a>
+</dt>
+<dt> <a href="#id2704636">Requirements</a>
+</dt>
+</dl>
+</div>
+<p>SwiProlog-C++ is a wrapper around the SWI-Prolog Foreign
+      Language Interface. It allows you to write parts of a program in
+      Prolog, and other parts in C++. You can either embed the SWI-Prolog
+      engine in a C++ application, using it as a logic component, or use
+      C++ to define foreign predicates (or both).
+    </p>
+<p>SwiProlog-C++ aims at a smooth integration of the SWI-Prolog
+      constructs in the C++ environment. It makes use of advanced C++
+      features, such as templates, namespaces and STL integration. It tries
+      to shield the user from hard to understand memory management and
+      other issues of the SWI-Prolog implementation.
+      Using SwiProlog-C++ should be much easier than using the Foreign Language Interface.
+    </p>
+<div class="section">
+<a name="id2705734"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2705734"></a>Status</h2></div></div>
+<p>SwiProlog-C++ isn't finished yet. It is in a proceded state, and
+      as far as it goes, is tested and mostly documented. It also should be
+      quite mature and usable, since a lot of thought and reconsideration
+      has gone into it. However, some things remain to be done. And it
+      hasn't been in much usage yet.
+    </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2704631"></a>Null bytes in atoms and Prolog strings aren't considered.
+        </p></li>
+<li><p>
+<a name="id2700944"></a>The <tt>main()</tt> function must be in the C++
+          part of the program.
+        </p></li>
+<li><p>
+<a name="id2698914"></a>Converting terms to strings should be done in such a way,
+          that the strings are valid Prolog expressions (like
+          <tt>write(..., [quoted(true)])</tt>).
+        </p></li>
+<li><p>
+<a name="id2762390"></a>Exceptions should conform to the ISO standard.
+        </p></li>
+<li><p>
+<a name="id2750153"></a>The documentation of how to write foreign predicates has not
+          yet been written. See the test program for some examples.
+        </p></li>
+</ul></div>
+</div>
+<div class="section">
+<a name="id2704636"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2704636"></a>Requirements</h2></div></div>
+<div class="variablelist"><dl>
+<dt>
+<a name="id2704647"></a><span class="term">SWI-Prolog</span>
+</dt>
+<dd><p>
+<a name="id2704654"></a>I'm using version 4.0.9. Later versions should also work.
+          </p></dd>
+<dt>
+<a name="id2704665"></a><span class="term">C++ compiler</span>
+</dt>
+<dd><p>
+<a name="id2704673"></a>It is tested with GCC 2.95, but any compliant C++ compiler
+            should do. GCC 3.02 does not work, because of bugs.
+          </p></dd>
+<dt>
+<a name="id2704686"></a><span class="term">Docbook-XML installation</span>
+</dt>
+<dd><p>
+<a name="id2704693"></a>The documentation is written using Docbook 4.1.2 (the XML version) and
+            Normal Walsh's Docbook XML stylesheets 1.40 for formatting. The
+            XSLT processor is xsltproc 1.0.0, but any should do. You need this
+            only if you want to change the manual.
+          </p></dd>
+</dl></div>
+</div>
+</div>
+<div class="chapter">
+<div class="titlepage"><div><h2 class="title">
+<a name="userguide"></a>Chapter 2. User Guide</h2></div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt> <a href="#tgtcg">The Global Term Components Graph</a>
+</dt>
+<dt> <a href="#id2704890">Initialisation</a>
+</dt>
+<dt> <a href="#id2704740">Working With Terms</a>
+</dt>
+<dt> <a href="#frfrm">Frames and Frame Membership</a>
+</dt>
+<dt> <a href="#fopre">Foreign Predicates</a>
+</dt>
+<dt> <a href="#cam">Concepts and Models</a>
+</dt>
+<dd><dl>
+<dt> <a href="#concepta">Assignable</a>
+</dt>
+<dt> <a href="#conceptdc">Default Constructible</a>
+</dt>
+<dt> <a href="#conceptec">Equality Comparable</a>
+</dt>
+<dt> <a href="#conceptltc">Less Than Comparable</a>
+</dt>
+</dl></dd>
+</dl>
+</div>
+<p>This section describes how to use SwiProlog-C++ and provides
+        examples. The full details are covered in <a href="#reference" title="Chapter 3. Reference">Chapter 3. Reference</a>.
+    </p>
+<div class="section">
+<a name="tgtcg"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="tgtcg"></a>The Global Term Components Graph</h2></div></div>
+<p>Terms are the central data type. They reside in memory
+      managed by the Prolog engine, and are accessed via handles from the
+      C++ side. The handles are encapsulated by the class <tt>Term</tt>,
+      which is the most important type for interfacing to Prolog.
+    </p>
+<p>All the terms form a global graph of term components. Terms can
+      be atomic (atoms, numbers...), or compound. Compound terms consist of
+      a functor ID and pointers to subterms. They can share common
+      subterms. Interfacing to the Prolog engine is all about dealing with the
+      terms in this global graph.
+    </p>
+<p>On the Prolog side, we have value semantics. This means,
+      variables denote values, not storage places like in C++. Values can't
+      be changed. Free variables denote values that are &#x201C;not yet
+      known&#x201D;. Terms can contain free variables, which makes them
+      &#x201C;incomplete values&#x201D;, a notion alien to imperative
+      programming. (Things become more complicated if you use non-logical
+      prediates.)
+    </p>
+<p>Seen from the C++ side, terms <i>do</i> change, by
+      unification. Free variables can be bound. This replaces them by the
+      terms they get bound to. They also change by backtracking, when
+      bindings are undone. Subterms can be shared by several superterms.
+      When a subterm changes, all the superterms change as well. You can't
+      tell from a term which other terms share parts of it. Unification and
+      de-unification (binding and unbinding) are the only way terms can
+      change.
+    </p>
+<p>A <tt>Term</tt> object is a handle for a term in the global term
+      component graph. It behaves (mostly) like a pointer. Such pointers
+      are the only way to access terms. In particular, <tt>Term</tt> objects don't
+      behave like term <i>values</i>. They are pointers.
+    </p>
+</div>
+<div class="section">
+<a name="id2704890"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2704890"></a>Initialisation</h2></div></div>
+<p>In version 0.1.0 it isn't yet possible to have the main()
+    function on the Prolog side. It must be a C++ function. </p>
+<p>At the beginning, the Prolog engine must be initialised. This is
+      done by <tt>prolog_init()</tt>. It also must be shut
+      down at the end. SwiProlog-C++ makes sure this happens. It is also
+      possible to explicitly shut down the Prolog engine and restart it.
+    </p>
+<p>A typical <tt>main()</tt> function looks like this.
+    </p>
+<pre class="programlisting">int main(int argc, char** argv)
+{
+  try {
+    prolog_init(argc, argv);
+
+    // ...
+
+  } catch (PlError&amp; err) {
+    cerr &lt;&lt; &quot;error: &quot; &lt;&lt; err.message() &lt;&lt; endl;
+    return 1;
+  }
+}
+</pre>
+<p>Anything involving the Prolog engine must be done after it is
+      started. [In fact, not exactly anything, but let's pretend so]. This
+      means that any Prolog related data (terms, atoms, functors, ...)
+      can't be static. The following will not work. Instead, one would have
+      to do the initialisation of any global or static data after the
+      engine is ready.
+    </p>
+<pre class="programlisting">Term t(&quot;foo(1,2,3)&quot;);
+
+int main(int argc, char** argv)
+{
+  // ...
+}
+</pre>
+<p>There is a mechanism in SwiProlog-C++ for handling such defered
+      initialisation; and reinitialisation in the case of a restarted
+      engine. All the affected classes have corresponding
+      <tt>Static</tt>... variants. If they are initialised while
+      the engine is not running, they defer the actual (Prolog-side)
+      initialisation until the engine is ready. If it is restarted, they
+      reinitialise. Apart from that, they behave mostly like
+      their non-static counterparts. The above can be achieved like this.
+    </p>
+<pre class="programlisting">StaticTerm t(&quot;foo(1,2,3)&quot;);
+
+int main(int argc, char** argv)
+{
+  // ...
+}
+</pre>
+</div>
+<div class="section">
+<a name="id2704740"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2704740"></a>Working With Terms</h2></div></div>
+<p>A <tt>Term</tt> object is essentially a pointer into the global term
+      component graph. However, there is a difference: they can't be
+      compared. (There is no way to define comparision operators on the
+      terms-as-pointers). This means, for instance, that terms can't be
+      used as keys for sorted containers. The comparision operators which
+      are defined for <tt>Term</tt> compare the terms pointed to, not the
+      pointers.
+    </p>
+<p>Terms can be created from many data types, and they can be
+      converted to those data types. This is very convenient, since terms
+      can be used much like if they were the values they contain.
+      Similarly, global comparision operators are defined. For instance:
+    </p>
+<pre class="programlisting">Term myfunction(int i, Term t)
+{
+  if (i &gt; t) {
+    int ints[] = { 1, 2, 3 };
+    return list&lt;int&gt;(ints, ints+3);
+  }
+  // ...
+}
+</pre>
+<p>
+<tt>Term</tt> objects refer data managed by the Prolog engine.
+      When new <tt>Term</tt> obejcts are created, new storage space is allocated
+      inside the engine. It will eventually be garbage collected, if it
+      is no longer referenced. But simply destroying the <tt>Term</tt> objects
+      will <i>not</i> remove the references. (Because of the
+      way the SWI-Prolog engine works, this isn't possible). In order to
+      ensure that unused data will be deleted, frames must be used. See
+      <a href="#frfrm" title="Frames and Frame Membership">the section called &#x201C;Frames and Frame Membership&#x201D;</a>.
+    </p>
+<p>C++ code called from the Prolog side (a foreign predicate) runs
+      in an implicit frame, so ressources it allocated will eventually be
+      reclaimed. But if the Prolog engine is embedded in C++ code (terms
+      being manipulated outside any foreign predicate invocations) frames
+      must be used explicitly. They should also be used in long
+      computations inside foreign predicates.
+    </p>
+</div>
+<div class="section">
+<a name="frfrm"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="frfrm"></a>Frames and Frame Membership</h2></div></div>
+<p>
+      Frames and frame membership do not need to be considered if terms are
+      only manipulated inside foreign predicates, and no <tt>Term</tt> objects are
+      kept between invocations of foreign predicates (such as storing them
+      as global variables or on the heap). Otherwise, things become a bit
+      more complicated.
+    </p>
+<p>Creating a new <tt>Term</tt> object consumes ressources in the Prolog
+      engine in two ways. First, a cell on the so called &#x201C;local
+      stack&#x201D;, is allocated. Stack cells are references to data
+      (terms) held by the Prolog engine. Second, as long as such data is
+      referenced, it will not be garbage collected. Assigning a new value
+      to the <tt>Term</tt> object will not destroy the old reference.
+    </p>
+<p>
+      In order to reclaim the stack cells, code portions are enclosed
+      in frames. When the frame is left, all stack cells which have been
+      allocated inside of it will be freed. Closing a frame has no other
+      effect. After the local stack cells are no longer in use, the
+      data they refered can be garbage collected.
+      Frames nest. There is an implicit outermost frame, which encloses the
+      entire execution of the Prolog engine (from initialisation until
+      shutdown).
+    </p>
+<p>Every foreign predicate runs in an implicit frame. This is
+      only the case if it is called by the Prolog engine, as a foreign
+      predicate. Calling the same function from the C++ side, as an
+      ordinary C++ function, does not make it run in a frame. Foreign
+      predicates are discussed in <a href="#fopre" title="Foreign Predicates">the section called &#x201C;Foreign Predicates&#x201D;</a>.
+    </p>
+<p>
+      Every valid <tt>Term</tt> object is member of one of the currently active
+      frames, because it uses a stack cell. Closing a frame
+      <i>invalidates any still existing <tt>Term</tt> objects which belong
+      to that frame</i>. Invalid <tt>Term</tt>s are allowed to exist, but
+      they must not be used, except for assigning a new value.
+    </p>
+<p>
+      When a new <tt>Term</tt> object is created, it becomes member of the
+      currently active (innermost) frame. <tt>Frame</tt>s are supposed to be used
+      as automatic variables. When a <tt>Frame</tt> object is destroyed (when the
+      variable goes out of scope), the corresponding frame is closed.
+      <tt>Term</tt>s should be automatic variables as well, and be passed by
+      value. When used this way, invalid <tt>Term</tt>s are unlikely to occur. For
+      instance:
+    </p>
+<pre class="programlisting">Term t1;
+{
+  Frame fr;
+  Term t2 = &quot;foo(X,Y)&quot;;
+  func(t2);
+  t1.unify(t2);
+  // ...
+
+} // t2 invalidated and out of scope, t1 unaffected
+</pre>
+<p>The following, on the other hand, will probably cause a crash.
+    </p>
+<pre class="programlisting">Term* termptr;
+{
+  Frame fr;
+  termptr = new Term;
+  termptr-&gt;unify(&quot;foo(X,Y)&quot;);
+}
+cout &lt;&lt; *termptr;
+</pre>
+<p>When a <tt>Term</tt> object is assigned a new value - being made point to
+      another term - it <i>changes frame membership</i>. It
+      &#x201C;migrates&#x201D; to the same frame as the other <tt>Term</tt>. (This
+      unfortunate behaviour can't be avoided; see the <a href="#termsemantics" title="Semantics of Term Objects">implementation notes</a> for details
+      why).
+    </p>
+<pre class="programlisting">Term t;
+{
+  Frame fr;
+  t = 42;
+} // t invalidated
+
+cout &lt;&lt; t; // crash
+</pre>
+<p>In the above example, <tt>t = 42</tt> is the same as
+      <tt>t = Term(42)</tt>, and the new term &#x201C;42&#x201D;
+      becomes member of the frame <tt>fr</tt>.
+      <tt>t</tt> is then assigned this new term, and also becomes
+      member of <tt>fr</tt>. It is invalidated when
+      <tt>fr</tt> is left.
+    </p>
+<p>In order to avoid this, the following code should be used instead.
+      <tt>t</tt> starts by pointing to a free variable, which can
+      then be bound.
+    </p>
+<pre class="programlisting">Term t;
+{
+  Frame fr;
+  t.unify(42);
+}
+
+cout &lt;&lt; t;
+</pre>
+<p>In the above example, the <tt>Term</tt> object isn't actually changed -
+      the term pointed to is changed. 
+    </p>
+<p>Yet to discuss is a more exotic way to assign to a <tt>Term</tt>,
+      which should be avoided if at all possibe. It's the
+      <tt>Term::assign()</tt> method. Sometimes it might be
+      necessary to actually change the pointer, making it point to a
+      different term. <tt>assign()</tt> does this. It does
+      the same as an assignment, but <i>without</i> making
+      the <tt>Term</tt> object migrate to a different frame. The example can also
+      correctly be implemented like this. Again, a term is created from the
+      integer 42 by an implicit conversion.
+    </p>
+<pre class="programlisting">Term t;
+{
+  Frame fr;
+  t.assign(42);
+}
+
+cout &lt;&lt; t;
+</pre>
+<p>The drawback is that <tt>assign()</tt> can not be used
+      if copies of the <tt>Term</tt> object exist. You must guarantee this, or you
+      will break the class <tt>Term</tt>'s semantics of behaving like pointers to
+      terms. For instance:
+    </p>
+<pre class="programlisting">Term t1 = 42;
+Term t2 = t1;
+
+// t1 == t2 == 42
+
+t1.assign(&quot;foobar&quot;);
+
+// Now *both*, t1 and t2 point to &quot;foobar&quot;.
+</pre>
+<p>(The difference between <tt>Term::operator = ()</tt> and
+      <tt>Term::assign()</tt> is that the assignment operator
+      makes the object use the same stack cell as the other term, whereas
+      <tt>assign()</tt> changes the contents of the stack cell in
+      use.)
+    </p>
+<p>When possible, unification should be used instead of
+      <tt>assign()</tt>. Another option might be <a href="#recordedterm" title="RecordedTerm"><tt>RecordedTerm</tt></a>.
+    </p>
+<p>So far, the use of frames for freeing unused memory space inside
+      the Prolog engine has been discussed. There is another purpose for
+      frames: causing backtracking.
+    </p>
+<p>
+      Backtracking is caused by calling the frame's
+      <tt>rewind()</tt> method. This will backtrack to the point
+      where the frame was opened, undoing all unifications (bindings). The
+      references to data created inside the Prolog engine are also
+      destroyed. This means that all <tt>Term</tt> objects which belong to the
+      frame are invalidated. Calling <tt>rewind()</tt> does not
+      close the frame. It just goes back to the state when the frame has
+      been opened.
+    </p>
+</div>
+<div class="section">
+<a name="fopre"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="fopre"></a>Foreign Predicates</h2></div></div>
+</div>
+<p>XXX not yet written
+  </p>
+<div class="section">
+<a name="cam"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="cam"></a>Concepts and Models</h2></div></div>
+<p>In order to precisely capture some of the semantics of the
+      classes provided by SwiProlog-C++, this documentation uses the notions of
+      <i>concepts</i> and <i>models</i>, as
+      defined in <a href="http://www.sgi.com/tech/stl/" target="_top">SGI's
+      documentation of the Standard Template Library</a>.
+    </p>
+<p>In short, a concept specifies a set of syntactic expressions
+      which must be valid for a type, and their meaning. A model of the
+      concept is a type which satisfies all the requirements. The generic
+      (template based) classes and functions of the STL can be used for
+      types which are models of the specified concepts. See the <a href="http://www.sgi.com/tech/stl/stl_introduction.html" target="_top">introduction
+      page of the SGI documentation</a> for details.
+    </p>
+<p>The following concepts are used in SwiProlog-C++. The semantics are
+      that some operations are defined the way you would expect.</p>
+<div class="section">
+<a name="concepta"></a><div class="titlepage"><div><h3 class="title">
+<a name="concepta"></a>Assignable</h3></div></div>
+<p>A type is Assignable if it is possible to copy objects of
+        that type and to assign values of the type to variables. The
+        copy constructor, assignment operator and
+        <tt>swap</tt> method must be defined.</p>
+<p><a href="http://www.sgi.com/tech/stl/Assignable.html" target="_top">Entry in the
+        SGI documentation</a></p>
+</div>
+<div class="section">
+<a name="conceptdc"></a><div class="titlepage"><div><h3 class="title">
+<a name="conceptdc"></a>Default Constructible</h3></div></div>
+<p>A type is Default Constructible if it has a default
+        constructor.</p>
+<p><a href="http://www.sgi.com/tech/stl/DefaultConstructible.html" target="_top">Entry in the SGI documentation</a></p>
+</div>
+<div class="section">
+<a name="conceptec"></a><div class="titlepage"><div><h3 class="title">
+<a name="conceptec"></a>Equality Comparable</h3></div></div>
+<p>A type is Equality Comparable if objects of that type can be
+        compared for equality using <tt>operator == ()</tt>, and
+        if it is an equivalence relation. <tt>operator
+        == ()</tt> and <tt>operator != ()</tt> must be
+        defined.
+      </p>
+<p><a href="http://www.sgi.com/tech/stl/EqualityComparable.html" target="_top">Entry in the SGI documentation</a></p>
+</div>
+<div class="section">
+<a name="conceptltc"></a><div class="titlepage"><div><h3 class="title">
+<a name="conceptltc"></a>Less Than Comparable</h3></div></div>
+<p>A type is Less Than Comparable if it has the comparision
+        operators <tt>&gt;</tt>, <tt>&lt;</tt>,
+        <tt>&gt;=</tt> and <tt>&lt;=</tt> defined,
+        and they implement a partial ordering.
+      </p>
+<p><a href="http://www.sgi.com/tech/stl/LessThanComparable.html" target="_top">
+        Entry in the SGI documentation</a></p>
+</div>
+</div>
+</div>
+<div class="chapter">
+<div class="titlepage"><div><h2 class="title">
+<a name="reference"></a>Chapter 3. Reference</h2></div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt> <a href="#startstop">Starting and Restarting the Prolog Engine</a>
+</dt>
+<dt> <a href="#id2699801">Global Functions and Operators</a>
+</dt>
+<dd><dl>
+<dt> <a href="#id2699809"><tt>unify</tt></a>
+</dt>
+<dt> <a href="#id2705506">Comparision Operators</a>
+</dt>
+<dt> <a href="#id2699852"><tt>atom_to_term</tt></a>
+</dt>
+</dl></dd>
+<dt> <a href="#id2699954">Types</a>
+</dt>
+<dd><dl>
+<dt> <a href="#atom"><tt>Atom</tt></a>
+</dt>
+<dt> <a href="#id2700036"><tt>Frame</tt></a>
+</dt>
+<dt> <a href="#id2700094"><tt>Functor</tt></a>
+</dt>
+<dt> <a href="#id2700153"><tt>Module</tt></a>
+</dt>
+<dt> <a href="#id2700722"><tt>Predicate</tt></a>
+</dt>
+<dt> <a href="#query"><tt>Query</tt></a>
+</dt>
+<dt> <a href="#recordedterm"><tt>RecordedTerm</tt></a>
+</dt>
+<dt> <a href="#id2763384"><tt>StaticAtom</tt></a>
+</dt>
+<dt> <a href="#id2763431"><tt>StaticFunctor</tt></a>
+</dt>
+<dt> <a href="#id2763485"><tt>StaticPredicate</tt></a>
+</dt>
+<dt> <a href="#id2763532"><tt>StaticQuery</tt></a>
+</dt>
+<dt> <a href="#id2763781"><tt>StaticTerm</tt></a>
+</dt>
+<dt> <a href="#id2764013"><tt>Term</tt></a>
+</dt>
+<dt> <a href="#termtype">TermType</a>
+</dt>
+<dt> <a href="#id2765346"><tt>ForeignPredicate</tt></a>
+</dt>
+</dl></dd>
+<dt> <a href="#id2765359">Exceptions</a>
+</dt>
+</dl>
+</div>
+<div class="section">
+<a name="startstop"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="startstop"></a>Starting and Restarting the Prolog Engine</h2></div></div>
+<pre class="programlisting">void prolog_init(int argc, char const * const * argv);
+void prolog_halt(void);
+</pre>
+<p>
+<tt>prolog_init</tt> initialises the Prolog engine.
+        It must be called before anything which involves it can be
+        performed. The parameters <i><tt>argc</tt></i> and
+        <i><tt>argv</tt></i> are the ones from the
+        <tt>main</tt> function. It calls the Foreign Language Interface function
+        <tt>PL_initialise</tt>. This can fail for many reasons,
+        in which case a <tt>GeneralError</tt> is thrown. See the SWI-Prolog
+        Reference Manual for the exact actions which are taken.
+      </p>
+<p>
+<tt>prolog_halt</tt> shuts down the prolog engine.
+        This is done automatically when the program exits, so you normally
+        do not need to call this function.
+      </p>
+<p>You can shut down the prolog engine with
+      <tt>prolog_halt</tt> and restart it with
+      <tt>prolog_init</tt>. Note that this is very expensive.
+      All data which lives inside the Prolog engine is destroyed in this
+      process, all <tt>Term</tt> objects invalidated, etc.
+      </p>
+</div>
+<div class="section">
+<a name="id2699801"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2699801"></a>Global Functions and Operators</h2></div></div>
+<div class="section">
+<a name="id2699809"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2699809"></a><tt>unify</tt></h3></div></div>
+<a name="__unify"></a><pre class="programlisting">bool unify(const Term&amp; t1, const Term&amp; t2);
+
+template &lt;typename T&gt;
+bool unify(const Term&amp; t, const T&amp; v);
+
+template &lt;typename T&gt;
+bool unify(const T&amp; v, const Term&amp; t);
+</pre>
+<p>These functions are defined for convenience. They are the same as
+          <tt>t1.unify(t2)</tt> and <tt>t.unify(v)</tt>,
+          respecitvely. See <a href="#term__unify">Term::unify()</a>.
+        </p>
+</div>
+<div class="section">
+<a name="id2705506"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2705506"></a>Comparision Operators</h3></div></div>
+<pre class="programlisting">template &lt;typename V&gt; bool operator == (const Term&amp;, const V&amp;);
+template &lt;typename V&gt; bool operator == (const V&amp;,    const Term&amp;);
+template &lt;typename V&gt; bool operator != (const Term&amp;, const V&amp;);
+template &lt;typename V&gt; bool operator != (const V&amp;,    const Term&amp;);
+template &lt;typename V&gt; bool operator &gt;  (const Term&amp;, const V&amp;);
+template &lt;typename V&gt; bool operator &gt;  (const V&amp;,    const Term&amp;);
+template &lt;typename V&gt; bool operator &lt;  (const Term&amp;, const V&amp;);
+template &lt;typename V&gt; bool operator &lt;  (const V&amp;,    const Term&amp;);
+template &lt;typename V&gt; bool operator &gt;= (const Term&amp;, const V&amp;);
+template &lt;typename V&gt; bool operator &gt;= (const V&amp;,    const Term&amp;);
+template &lt;typename V&gt; bool operator &lt;= (const Term&amp;, const V&amp;);
+template &lt;typename V&gt; bool operator &lt;= (const V&amp;,    const Term&amp;);
+</pre>
+<p>These operators let you compare a term to a value of any type
+          which it can be converted to. First they convert the <tt>Term</tt>
+          parameter to the template type <tt>V</tt>. Then they
+          apply the corresponding comparision operator. This way, a <tt>Term</tt>
+          can be compared with a value of any type which it can be converted
+          to, and which has the comparision operator defined. If the
+          conversion fails, an exception is raised (at least for the
+          conversions defined by SwiProlog-C++).
+        </p>
+<p>For instance, assume <tt>t</tt> is of type <tt>Term</tt>.
+          Then <tt>t &gt; 42</tt> means <tt>((int) t) &gt;
+          42</tt>. This is different from <tt>t &gt; (Term)
+          42</tt>, which compares <tt>t</tt> to
+          <tt>42</tt> in standard term order. When both arguments
+          are terms, you they are always compared in standard term order. If
+          you want to compare them as values of some type, you need to
+          convert one of them. For instance, <tt>t1 &gt; (int)
+          t2</tt>.
+        </p>
+</div>
+<div class="section">
+<a name="id2699852"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2699852"></a><tt>atom_to_term</tt></h3></div></div>
+<pre class="programlisting">bool atom_to_term(const char* text, Term* term, list&lt;Term::Binding&gt;* bindings);
+
+struct Term::Binding
+{
+  string name;
+  Term   var;
+  Binding(string n, Term v) : name(n), var(v) {}
+};
+
+Term::operator Binding () const;
+</pre>
+<p>This is an interface to the <tt>atom_to_term/3</tt>
+          predicate. The new term is stored in <tt>term</tt>, if
+          successful, and the list of bindings is converted to
+          <tt>list&lt;Term::Binding&gt;</tt> and stored in
+          <tt>bindings</tt>. The return value if
+          <tt>true</tt> if the conversion was successful.
+        </p>
+<p>The conversion operator converts a term in the form <tt>Name =
+          Value</tt> to a <tt>Term::Binding</tt>. It is used
+          by <tt>atom_to_term()</tt>.
+        </p>
+</div>
+</div>
+<div class="section">
+<a name="id2699954"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2699954"></a>Types</h2></div></div>
+<div class="section">
+<a name="atom"></a><div class="titlepage"><div><h3 class="title">
+<a name="atom"></a><tt>Atom</tt></h3></div></div>
+<p>The class <tt>Atom</tt> represents Prolog atoms. It is a model of
+        <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and <a href="#concepta" title="Assignable">Assignable</a>. <tt>Atom</tt> objects don't have
+        any meaningful order, such as lexicographic. It is only guaranteed
+        that the comparision operators implement a total ordering. This is
+        enough to store atoms in sorted containers such as
+        <tt>set&lt;&gt;</tt> or <tt>map&lt;&gt;</tt>.
+        (In fact, the handles which the Prolog engine assigns are
+        compared).
+      </p>
+<pre class="programlisting">Atom::Atom(const char *);
+Atom::Atom(string);
+</pre>
+<p>This creates an <tt>Atom</tt> which represents an already existing
+          or newly created Prolog atom. The string is copied to memory
+          managed by the Prolog engine.
+        </p>
+<pre class="programlisting">Atom::Atom(const Term&amp;);
+Atom::Atom(string);
+</pre>
+<p>This extracts an atom from a term which only consists of
+          that atom. If the term does not encapsulate one atom, then an
+          <tt>ConversionError</tt> exception is raised.
+        </p>
+<pre class="programlisting">bool Atom::operator == (const Atom&amp;) const;
+bool Atom::operator != (const Atom&amp;) const;
+
+bool Atom::operator &gt;  (const Atom&amp;) const;
+bool Atom::operator &lt;  (const Atom&amp;) const;
+bool Atom::operator &gt;= (const Atom&amp;) const;
+bool Atom::operator &lt;= (const Atom&amp;) const;
+
+Atom::Atom(const Atom&amp;);
+Atom::operator = (const Atom&amp;);
+void Atom::swap(Atom&amp;);
+</pre>
+<p>These implement the concepts <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+          <a href="#concepta" title="Assignable">Assignable</a>.
+        </p>
+<pre class="programlisting">Atom::operator const char * () const;
+</pre>
+<p>This returns the atom as a string. The string resides in
+          static memory managed by the Prolog engine, and remains valid as
+          long as it is not garbage collected. This means, as long as any
+          term exists which uses the atom. It must not be changed.
+        </p>
+<p>The conversion requires one function call. This is relatively
+          expensive.
+        </p>
+<pre class="programlisting">ostream&amp; operator &lt;&lt; (ostream&amp;, const Atom&amp;);
+</pre>
+<p>This writes the atom as a string to the stream.
+        </p>
+</div>
+<div class="section">
+<a name="id2700036"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2700036"></a><tt>Frame</tt></h3></div></div>
+<p>There are two purposes of frames: reclaiming ressources and
+        retrying. Creating new <tt>Term</tt> objects will consume local stack
+        cells in the Prolog engine. Enclosing a code portion in a frame
+        will reclaim the stack cells when the frame is left, thereby
+        invalidating any <tt>Term</tt> objects which might still be using them.
+        Closing a frame has no other effect.
+      </p>
+<p>Rewinding a frame is a different thing. It has the effect of
+        backtracking to the point where the frame was opened. All bindings
+        (unifications) done since the frame was opened are undone, and all
+        data created inside the Prolog engine is no longer referenced and
+        therefore deleted. The local stack cells are also reclaimed.
+      </p>
+<p>Note that every foreign predicate invocation done by the Prolog
+        engine runs inside an implicit frame.
+      </p>
+<pre class="programlisting">Frame::Frame();
+</pre>
+<p>This opens a new frame. It will be closed when the object is
+        destroyed. Normally, a <tt>Frame</tt> is an automatic variable, so the
+        frame will be closed when the variable goes out of scope.
+      </p>
+<pre class="programlisting">Frame::~Frame();
+</pre>
+<p>Destroying the <tt>Frame</tt> object closes the frame. All <tt>Term</tt>
+        objects which belong to the frame are invalidated, and the
+        associated ressources (cells on the local stack) reclaimed. Any
+        unifications done with the terms pointed to stay in effect.
+      </p>
+<pre class="programlisting">void Frame::rewind();
+</pre>
+<p>Invalidate all <tt>Term</tt>s which belong to the frame, and undo all
+        unifications done since the frame was created. The frame stays
+        open. This calls the Foreign Language Interface function
+        <tt>PL_rewind_foreign_frame()</tt>.
+      </p>
+<p>(There is no need for an equivalent of
+        <tt>PL_discard_foreign_frame</tt>, because the effect is
+        achieved by calling <tt>Frame::rewind()</tt> before the <tt>Frame</tt>
+        object is destroyed).
+      </p>
+</div>
+<div class="section">
+<a name="id2700094"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2700094"></a><tt>Functor</tt></h3></div></div>
+<p>A <tt>Functor</tt> object represents a name/arity pair, as used by
+        Prolog for constructing terms.
+      </p>
+<p>
+<tt>Functor</tt> is a model of <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#concepta" title="Assignable">Assignable</a>. Two <tt>Functor</tt> objects are equal iff they represent the
+        same functor. The comparision operations implement no particular
+        ordering.
+      </p>
+<pre class="programlisting">Functor::Functor(const char * name, int arity);
+Functor::Functor(string name, int arity)
+</pre>
+<p>Make a new <tt>Functor</tt> object which represents a newly
+        registered or an alreay existing one.
+      </p>
+<pre class="programlisting">Functor::Functor(const Term&amp;);
+</pre>
+<p>Extract the uppermost functor from the term. Throw a
+        <tt>ConversionError</tt> exception if the it is not compound or an atom.
+      </p>
+<pre class="programlisting">const char* Functor::name() const;
+int Functor::arity() const;
+</pre>
+<p>Get name and arity of the functor, respecitvely. The pointer
+        returned by <tt>name()</tt> points to storage managed by
+        the Prolog engine.
+      </p>
+<pre class="programlisting">string Functor::info() const;
+</pre>
+<p>Return name and arity of the functor as a string in the form
+        &#x2018;<tt>name/arity</tt>&#x2019;.
+      </p>
+<pre class="programlisting">bool Functor::operator == (const Functor&amp;) const;
+bool Functor::operator != (const Functor&amp;) const;
+
+bool Functor::operator &gt;  (const Functor&amp;) const;
+bool Functor::operator &lt;  (const Functor&amp;) const;
+bool Functor::operator &gt;= (const Functor&amp;) const;
+bool Functor::operator &lt;= (const Functor&amp;) const;
+
+Functor::Functor(const Functor&amp;);
+Functor::Functor operator = (const Functor&amp;);
+void Functor::swap(Functor&amp;);
+</pre>
+<p>These implement the concepts <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#concepta" title="Assignable">Assignable</a>.
+      </p>
+</div>
+<div class="section">
+<a name="id2700153"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2700153"></a><tt>Module</tt></h3></div></div>
+<p>A <tt>Module</tt> object holds a handle for a SWI-Prolog
+        module. They are needed at various points inside SwiProlog-C++.
+        Since <tt>const char *</tt> and <tt>string</tt>
+        are convertible to <tt>Module</tt>, you can always specify the module's
+        name instead.
+      </p>
+<p>
+<tt>Module</tt> is a model of <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#concepta" title="Assignable">Assignable</a>.
+      </p>
+<p>
+<tt>Module</tt> has a null value, created by the default constructor.
+        Its meaning depends on the context.
+      </p>
+<pre class="programlisting">Module::Module(const char*);
+Module::Module(string);
+</pre>
+<p>These two constructors create a <tt>Module</tt> which represents
+        either an already existing SWI-Prolog module, or a newly created
+        one. The argument is the module name. Calling the first one with a
+        null string has the same effect as the default constructor.
+      </p>
+<pre class="programlisting">Module::Module();
+</pre>
+<p>This creates the <tt>Module</tt> null value.
+      </p>
+<pre class="programlisting">const char* Module::name() const;
+</pre>
+<p>Return the name of the module.
+      </p>
+<pre class="programlisting">static Module Module::context();
+</pre>
+<p>Return the current context module.
+      </p>
+<pre class="programlisting">static Module Module::user();
+</pre>
+<p>Return the module with the name <tt>user</tt>. That's
+        the main module in SWI-Prolog.
+      </p>
+<pre class="programlisting">bool Module::operator == (const Module&amp;) const;
+bool Module::operator != (const Module&amp;) const;
+
+bool Module::operator &gt;  (const Module&amp;) const;
+bool Module::operator &lt;  (const Module&amp;) const;
+bool Module::operator &gt;= (const Module&amp;) const;
+bool Module::operator &lt;= (const Module&amp;) const;
+
+Module::Module(const Module&amp;);
+Module::Module operator = (const Module&amp;);
+void Module::swap(Module&amp;);
+</pre>
+<p>These implement the concepts <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#concepta" title="Assignable">Assignable</a>.
+      </p>
+</div>
+<div class="section">
+<a name="id2700722"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2700722"></a><tt>Predicate</tt></h3></div></div>
+<p>A <tt>Predicate</tt> differs from a <tt>Functor</tt> in that it also has an
+        associated context module. It is used to refer to predicates, but
+        the predicate does not acutally need to be defined. It rather
+        represents a name-arity-module triple.
+      </p>
+<p>
+<tt>Predicate</tt> is a model of <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#concepta" title="Assignable">Assignable</a>. Two <tt>Predicate</tt> objects are equal iff they represent the
+        same predicate. The comparision operations implement no particular
+        ordering.
+      </p>
+<pre class="programlisting">Predicate::Predicate(Functor, Module context_module = Module::context());
+</pre>
+<p>Create a new <tt>Predicate</tt> from functor and context module.
+        The context module of the predicate defaults to the current context
+        module.
+      </p>
+<pre class="programlisting">Predicate::Predicate(const char* name, int arity, Module context_module = Module::context());
+</pre>
+<p>Create a new <tt>Predicate</tt> from name, arity and context module.
+        The context module of the predicate defaults to the current context
+        module.
+      </p>
+<pre class="programlisting">void Predicate::info(char const ** name, int* arity, module_t * module) const;
+</pre>
+<p>Store name, arity and context module of the predicate in <tt>name</tt>,
+        <tt>arity</tt> and <tt>module</tt>. The pointer
+        stored in <tt>name</tt> points to memory managed by the
+        Prolog engine.
+      </p>
+<pre class="programlisting">const char* Predicate::name() const;
+int Predicate::arity() const;
+Module Predicate::module() const;
+</pre>
+<p>Get name, arity and context module of the predicate,
+        respectively. The pointer returned by <tt>name()</tt>
+        points to memory managed by the Prolog engine.
+      </p>
+<pre class="programlisting">string Predicate::info() const;
+</pre>
+<p>Return a descriptive text for the predicate in the form
+        &#x2018;<tt>module:name/arity</tt>&#x2019;.
+      </p>
+<pre class="programlisting">bool Predicate::operator == (const Predicate&amp;) const;
+bool Predicate::operator != (const Predicate&amp;) const;
+
+bool Predicate::operator &gt;  (const Predicate&amp;) const;
+bool Predicate::operator &lt;  (const Predicate&amp;) const;
+bool Predicate::operator &gt;= (const Predicate&amp;) const;
+bool Predicate::operator &lt;= (const Predicate&amp;) const;
+
+Predicate::Predicate(const Predicate&amp;);
+Predicate Predicate::operator = (const Predicate&amp;);
+void swap(Predicate&amp;);
+</pre>
+<p>These implement the concepts <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#concepta" title="Assignable">Assignable</a>.
+      </p>
+</div>
+<div class="section">
+<a name="query"></a><div class="titlepage"><div><h3 class="title">
+<a name="query"></a><tt>Query</tt></h3></div></div>
+<p>A <tt>Query</tt> is a simple and direct wrapper of the Foreign Language Interface query
+        functions. The following limitations apply.
+      </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2762712"></a>The query can by secified as the predicate to be called
+            only. You can't directly specify a complex term as a query,
+            like you can in Prolog. Any composite subterms of the predicate
+            must be supplied as argument terms, which you must build and
+            decompose on your own. <tt>StaticQuery</tt> provides a more
+            comfortable interface.
+          </p></li>
+<li><p>
+<a name="id2762729"></a>When the frame in which the query was created is left, and
+            the query is still running, it is implicitly closed. This
+            never occurs if frames and queries are automatic variables.
+          </p></li>
+<li><p>
+<a name="id2762745"></a>The Prolog engine must be running before a <tt>Query</tt> object can
+            be created. Normally, they are created as automatic variables.
+          </p></li>
+<li><p>
+<a name="id2762758"></a>Only one query at a time may be running, except for
+            recursively invoked foreign predicates. This restriction is due
+            to the Foreign Language Interface
+          </p></li>
+<li><p>
+<a name="id2762772"></a>The results are deunified when the next result is acquired.
+            This is not really a limitation, but the way backtracking
+            works.
+          </p></li>
+</ul></div>
+<pre class="programlisting">Query::Query(const char * name, int arity, Module context_module = Module());
+Query::Query(Predicate predicate, Module context_module = Module());
+</pre>
+<p>These two constructors create a new query from the predicate to
+        be called and the context module. To the first one, you specify the
+        predicate as name and arity, to the second one as a <tt>Predicate</tt>
+        object. The context module is relevant only for context transparent
+        queries (see the SWI-Prolog Reference Manual). The singleton context module, which is the
+        default parameter, means the context module of the calling context.
+      </p>
+<pre class="programlisting">Query::~Query();
+</pre>
+<p>The destructor closes the query, if this hasn't already been done.
+      </p>
+<pre class="programlisting">template &lt;typename ForwardIterator&gt;
+Query&amp; Query::operator () (ForwardIterator begin, ForwardIterator end);
+
+Query&amp; Query::operator () (Term, Term, Term, Term, Term, Term, Term, Term, Term);
+Query&amp; Query::operator () (Term, Term, Term, Term, Term, Term, Term, Term);
+Query&amp; Query::operator () (Term, Term, Term, Term, Term, Term, Term);
+Query&amp; Query::operator () (Term, Term, Term, Term, Term, Term);
+Query&amp; Query::operator () (Term, Term, Term, Term, Term);
+Query&amp; Query::operator () (Term, Term, Term, Term);
+Query&amp; Query::operator () (Term, Term, Term);
+Query&amp; Query::operator () (Term, Term);
+Query&amp; Query::operator () (Term);
+Query&amp; Query::operator () ();
+</pre>
+<p>These operators supply the arguments and start the query. You
+        can either supply the arguments (all <tt>Term</tt>s) as a STL style range,
+        or directly for up to nine arguments. The result is returned by
+        unifying unbound variables within the argument terms. The first
+        result will be retruned as soon as <tt>Query::next()</tt>
+        is called for the first time. The operators test if the number of
+        arguments matches the required number, and if another query is
+        still running. In either case, a <tt>LogicError</tt> is thrown.
+      </p>
+<pre class="programlisting">bool Query::next();
+</pre>
+<p>Generate the first or next result. The unifications done in the
+        argument terms for the previous result are always undone. If there
+        is another result, it is retured by (again) unifying the arguments,
+        and <tt>true</tt> is returned. If there is none, the
+        query is automatically closed and <tt>false</tt> is
+        returned. Prolog exceptions, raised inside the Prolog engine, are
+        converted to C++ and thrown as <tt>PrologException</tt>s. A <tt>LogicError</tt> is
+        raised if the query isn't running. Also see the <a href="#unsafe_exceptions"><tt>unsafe_exceptions</tt></a> flag.
+      </p>
+<pre class="programlisting">void Query::close();
+</pre>
+<p>Close the query prematurely, undoing all unifications done in
+        the arguments. Afterwards the query can be started again. A <tt>LogicError</tt> is
+        raised if the query isn't running.
+      </p>
+<pre class="programlisting">void Query::cut();
+</pre>
+<p>Closes the query prematurely, but retains the last result. That
+        is, the unifications done in the argument terms are not undone, and
+        the result stays valid. Afterwards the query can be started again.
+        A <tt>LogicError</tt> is raised if the query isn't running.
+      </p>
+<a name="unsafe_exceptions"></a><pre class="programlisting">bool Query::unsafe_exceptions;
+</pre>
+<p>This flag is normally <tt>false</tt>. If set to
+        <tt>true</tt>, it causes <tt>Query::next()</tt>
+        to throw <tt>UnsafePrologException</tt>s instead of <tt>PrologException</tt>s.
+        You normally don't need this flag.
+      </p>
+<p>A Prolog exception is a term. Throwing terms as parts of
+        exceptions is a bad idea, because many things can happen to them
+        when the stack is unwound. Most notably, when leaving a frame, they
+        are invalidated. Also, shared subterms could be changed by
+        unification or deunification. Therefore, <tt>PrologException</tt> stores
+        the term in its external representation, as returned by
+        <tt>Term::to_external()</tt>. This makes it completely
+        unvolunerable to any hazards. The method
+        <tt>as_term()</tt> converts the term back, so what it
+        returns is actually a deep copy of the original term.
+      </p>
+<p>The safety comes at a small price. First, there is a
+        performance penalty for creating the external representation.
+        Normally exceptions are exceptional, and exception terms are
+        small, so there is no problem. Second, it
+        <i>might</i> be possible, in some pathological
+        design, that indirectly changing the exception term via unification
+        or deunification of shared subterms is intended. This normally
+        isn't the case. Under almost all circumstances, the default
+        behaviour is fine.
+      </p>
+<p>The <tt>unsafe_exceptions</tt> flag gives you full
+        control. <a href="#unsafeprologexception"><tt>UnsafePrologException</tt></a>
+        differs from <tt>PrologException</tt> in that it does not store the
+        exception term in external form, but includes it as a <tt>Term</tt>
+        attribute, which is returned by <tt>as_term()</tt>. This
+        is dangerous.
+      </p>
+</div>
+<div class="section">
+<a name="recordedterm"></a><div class="titlepage"><div><h3 class="title">
+<a name="recordedterm"></a><tt>RecordedTerm</tt></h3></div></div>
+<p>This is an interface to SWI-Prolog's &#x2018;recorded
+        database&#x2019;. A <tt>RecordedTerm</tt> object embodies an entry in it.
+        The recorded database exists only while the Prolog engine is
+        running. The objects have a singular state, created by the default
+        constructor or the method <tt>clear()</tt>, which also
+        exists while the engine is not running. In this state, a
+        <tt>RecordedTerm</tt> object (logically) holds a term consisting of a free
+        variable. A <tt>RecordedTerm</tt> may be created only in singular state, as
+        long as the Prolog engine isn't initialized yet. When the engine is
+        shut down, all <tt>RecordedTerm</tt> objects go to singular state.
+      </p>
+<p>
+<tt>RecordedTerm</tt> is a model of <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>, <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and
+        <a href="#conceptdc" title="Default Constructible">Default Constructible</a>. The comparision operators implement no particular
+        ordering. It is not a model of <a href="#concepta" title="Assignable">Assignable</a>, because copying is
+        expensive. <tt>RecordedTerm</tt>s can be copied via the
+        <tt>duplicate()</tt> method.
+      </p>
+<pre class="programlisting">RecordedTerm::RecordedTerm();
+</pre>
+<p>Initialise the <tt>RecordedTerm</tt> in singular state, that is,
+        holding a free variable. This does not
+        require the Prolog engine to be running.
+      </p>
+<pre class="programlisting">RecordedTerm::RecordedTerm(Term);
+</pre>
+<p>Make the new <tt>RecordedTerm</tt> holding a copy of the argument.
+      </p>
+<pre class="programlisting">Term RecordedTerm::term();
+RecordedTerm::operator Term ();
+</pre>
+<p>Retrieve a copy of the term stored the recorded database. Each
+        call will create a new deep copy.
+      </p>
+<pre class="programlisting">void RecordedTerm::operator = (Term t);
+</pre>
+<p>Store a new term in this <tt>RecordedTerm</tt>, deleting the old
+        recorded database entry.
+      </p>
+<pre class="programlisting">void RecordedTerm::clear ();
+</pre>
+<p>Bring the <tt>RecordedTerm</tt> to singular state, making it hold a
+        free variable. Same as <tt>... = Term();</tt> (but slightly
+        more efficient).
+      </p>
+<pre class="programlisting">bool RecordedTerm::operator == (const RecordedTerm&amp;) const;
+bool RecordedTerm::operator != (const RecordedTerm&amp;) const;
+
+bool RecordedTerm::operator &gt;  (const RecordedTerm&amp;) const;
+bool RecordedTerm::operator &lt;  (const RecordedTerm&amp;) const;
+bool RecordedTerm::operator &gt;= (const RecordedTerm&amp;) const;
+bool RecordedTerm::operator &lt;= (const RecordedTerm&amp;) const;
+</pre>
+<p>These implement the concepts <a href="#conceptec" title="Equality Comparable">Equality Comparable</a> and <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a>.
+      </p>
+<pre class="programlisting">void swap(RecordedTerm&amp;);
+</pre>
+<p>Make the two <tt>RecordedTerm</tt>s change contents. This is a cheap
+        operation. 
+      </p>
+<pre class="programlisting">void RecordedTerm::duplicate(const RecordedTerm&amp;);
+</pre>
+<p>Make the object a deep copy of the other <tt>RecordedTerm</tt>. This
+        is expensive.
+      </p>
+</div>
+<div class="section">
+<a name="id2763384"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2763384"></a><tt>StaticAtom</tt></h3></div></div>
+<p>This is the &#x2018;static&#x2019; version of the <tt>Atom</tt> class.
+        It can be initialised before the Prolog engine is running, and
+        reinitialises itself automatically when the engine is restarted.
+      </p>
+<pre class="programlisting">StaticAtom::StaticAtom(const char*)
+</pre>
+<p>Create a <tt>StaticAtom</tt> consisting of the supplied text. This
+        string must remain valid. The <tt>StaticAtom</tt> does not take ownership
+        or copy it. It is meant to be a string literal.
+      </p>
+</div>
+<div class="section">
+<a name="id2763431"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2763431"></a><tt>StaticFunctor</tt></h3></div></div>
+<p>This is the &#x2018;static&#x2019; version of the <tt>Functor</tt> class.
+        It can be initialised before the Prolog engine is running, and
+        reinitialises itself automatically when the engine is restarted.
+      </p>
+<pre class="programlisting">StaticFunctor::StaticFunctor(const char * name, int arity);
+</pre>
+<p>Create a <tt>StaticFunctor</tt> from name and arity. The string
+        must remain valid. The <tt>StaticFunctor</tt> does not take ownership or
+        copy it. It is meant to be a string literal.
+      </p>
+</div>
+<div class="section">
+<a name="id2763485"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2763485"></a><tt>StaticPredicate</tt></h3></div></div>
+<p>This is the &#x2018;static&#x2019; version of the <tt>Predicate</tt> class.
+        It can be initialised before the Prolog engine is running, and
+        reinitialises itself automatically when the engine is restarted.
+      </p>
+<pre class="programlisting">StaticPredicate::StaticPredicate(const char* name, int arity, const char* module = &quot;user&quot;)
+</pre>
+<p>Create a <tt>StaticPredicate</tt> from name, arity and module. The two
+        strings
+        must remain valid. The <tt>StaticPredicate</tt> does not take ownership or
+        copy them. They are meant to be a string literals.
+      </p>
+</div>
+<div class="section">
+<a name="id2763532"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2763532"></a><tt>StaticQuery</tt></h3></div></div>
+<p>This is a subclass of <tt>Query</tt>, and improves it in the following ways.
+      </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2763552"></a><tt>StaticQuery</tt> objects can be created before the Prolog
+            engine is running. The actual initialisation is defered. They
+            reinitialise themselves when the engine is restarted. This
+            makes <tt>StaticQuery</tt> suitable for objects which reside in static
+            memory, such as global variables.
+          </p></li>
+<li><p>
+<a name="id2763573"></a>An easy way for specifying queries which have subterms is
+            provided, which makes it exactly like in Prolog.
+          </p></li>
+</ul></div>
+<p>A <tt>StaticQuery</tt> can be specified in one of two ways.
+        &#x2018;Predicate mode&#x2019; is the way <tt>Query</tt> works. You specify
+        a predicate, and its arguments are the query arguments.
+      </p>
+<p>In &#x2018;Prolog mode&#x2019; the query still has a
+        predicate to be called, but its arguments may themselves be terms,
+        with the actual query arguments being free variables inside of
+        them. In this mode, the arguments provided when a new query is
+        started, are filled in there. Only non-anonymous variables (names
+        not starting with &#x2018;&lt;literal&gt;_&lt;/literal&gt;&#x2019;)
+        become query arguments. For instance, the term
+        <tt>mypred(foo(bar(X,_,Y)),Z)</tt> specifies a query
+        which has three arguments.
+      </p>
+<p>Predicate mode is more efficient than Prolog mode, both time
+        and space wise. The <tt>StaticQuery</tt> can't know if the predicate
+        arguments it constructed last time, are still valid when a new
+        query is started. Therefore, it stores them in a <tt>RecordedTerm</tt>,
+        and creates a new copy every time. This means, a handfull of
+        possible extra function calls to the Foreign Language Interface, and a few extra terms
+        created, which will later be garbage collected.
+      </p>
+<pre class="programlisting">StaticQuery::StaticQuery(const char* name, int arity, const char* mod = 0);
+StaticQuery::StaticQuery(const char* text, const char* mod = 0);
+</pre>
+<p>The first one creates the new <tt>StaticQuery</tt> in predicate
+        mode, like <tt>Query</tt>. <tt>name</tt> and
+        <tt>arity</tt> are name and arity of the predicate to be
+        called.
+        The second one creates it in Prolog mode. <tt>text</tt>
+        specifies the query as a term.
+      </p>
+<p>
+        <tt>mod</tt> is the name of the context module (which is
+        relevant only for module transparent predicates). &#x2018;When NULL, the
+        context module of the calling context will be used, or user if
+        there is no calling context (as may happen in embedded systems).&#x2019;
+      </p>
+<p>
+<tt>name</tt>, <tt>text</tt> and
+        <tt>mod</tt> must stay valid, so they can be used when
+        the Prolog engine is stared or restarted. They are supposed to be
+        string literals. No memory management is done of them by
+        <tt>StaticQuery</tt>.
+      </p>
+<pre class="programlisting">template &lt;typename ForwardIterator&gt;
+StaticQuery&amp; StaticQuery::operator () (ForwardIterator begin, ForwardIterator end);
+
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term, Term, Term, Term, Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term, Term, Term, Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term, Term, Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term, Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term, Term);
+StaticQuery&amp; StaticQuery::operator () (Term);
+StaticQuery&amp; StaticQuery::operator () ();
+
+bool StaticQuery::next();
+void StaticQuery::cut();
+void StaticQuery::close();
+</pre>
+<p>Same as with <a href="#query" title="Query"><tt>Query</tt></a>.
+      </p>
+</div>
+<div class="section">
+<a name="id2763781"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2763781"></a><tt>StaticTerm</tt></h3></div></div>
+<p>
+<tt>StaticTerm</tt> is a subclass of <tt>RecordedTerm</tt> and provides
+        automatical initalisation. It is a model of <a href="#conceptec" title="Equality Comparable">Equality Comparable</a>,
+        <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a> and <a href="#conceptdc" title="Default Constructible">Default Constructible</a>. The comparision operators implement
+        no particular ordering. It is not a model of <a href="#concepta" title="Assignable">Assignable</a>, because
+        copying is expensive. It is still possible via the
+        <tt>duplicate()</tt> method.
+      </p>
+<pre class="programlisting">StaticTerm::StaticTerm();
+</pre>
+<p>Creates a <tt>StaticTerm</tt> which holds a free variable.
+      </p>
+<pre class="programlisting">StaticTerm::StaticTerm(const char*);
+</pre>
+<p>Creates a <tt>StaticTerm</tt> which automatically initialises and
+        reinitialises itself from the string representation provided as the
+        argument, when the Prolog engine is started or restarted. The
+        string is meant to be a string literal. It must remain valid, and
+        there is no memory management performed by <tt>StaticTerm</tt>.
+      </p>
+<p>Changing the term stored as a recorded term via
+        <tt>operator = (Term)</tt> has no effect on the next
+        reinitialisation of the <tt>RecordedTerm</tt>. However, a new
+        initialisation string may be provided via <tt>operator =
+        (const char*)</tt>.
+      </p>
+<pre class="programlisting">void StaticTerm::operator = (const char*)
+</pre>
+<p>Replace the initialisation string, such that the new one will
+        be used when the Prolog engine is restarted. The string must remain
+        valid, and its memory isn't managed by the <tt>StaticTerm</tt> (no
+        ownership taken).
+      </p>
+<pre class="programlisting">void StaticTerm::swap(StaticTerm&amp;);
+</pre>
+<p>Make the two <tt>StaticTerm</tt>s change contents, including the
+        initialisation strings. Fast operation.
+      </p>
+<pre class="programlisting">void StaticTerm::duplicate(const StaticTerm&amp;);
+</pre>
+<p>Make the object a copy of the argument. Same as
+        <tt>RecordedTerm::duplicate</tt>, but also affects the
+        initialisation string.
+      </p>
+<pre class="programlisting">Term StaticTerm::term();
+operator StaticTerm::Term ();
+void StaticTerm::operator = (Term);
+void StaticTerm::clear();
+
+bool StaticTerm::operator == (const StaticTerm&amp;) const;
+bool StaticTerm::operator != (const StaticTerm&amp;) const;
+
+bool StaticTerm::operator &gt;  (const StaticTerm&amp;) const;
+bool StaticTerm::operator &lt;  (const StaticTerm&amp;) const;
+bool StaticTerm::operator &gt;= (const StaticTerm&amp;) const;
+bool StaticTerm::operator &lt;= (const StaticTerm&amp;) const;
+</pre>
+<p>These are the same as for <a href="#recordedterm" title="RecordedTerm"><tt>RecordedTerm</tt></a>.
+      </p>
+</div>
+<div class="section">
+<a name="id2764013"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2764013"></a><tt>Term</tt></h3></div></div>
+<p>This is the most important class. A <tt>Term</tt> behaves (mostly) like a
+        pointer into a global graph of term components. This is discussed
+        in detail in <a href="#tgtcg" title="The Global Term Components Graph">the section called &#x201C;The Global Term Components Graph&#x201D;</a>.
+      </p>
+<p>
+<tt>Term</tt> is a model of <a href="#concepta" title="Assignable">Assignable</a> and of <a href="#conceptdc" title="Default Constructible">Default Constructible</a>. After you
+        assign a <tt>Term</tt> to another one, both point to the same term.
+      </p>
+<p>
+<tt>Term</tt> also has the comparision operators defined. But it is
+        <i>not</i> a model of either <a href="#conceptec" title="Equality Comparable">Equality Comparable</a> or
+        <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a>, because the comparisions operate on the terms pointed
+        to, not on the pointers. (Actually, because of the way SWI-Prolog
+        works, it is not possible to define comparisions which
+        compare the conceptual pointers).
+      </p>
+<p>This means that you can't use <tt>Term</tt> as a parameter for a template
+        which requires it to be a model of <a href="#conceptec" title="Equality Comparable">Equality Comparable</a> or <a href="#conceptltc" title="Less Than Comparable">Less Than Comparable</a>. For
+        instance, <tt>Term</tt>s can't be used as key for sorted containers. [ If
+        <tt>Term</tt>s are used in such a way that they have the semantics of
+        terms (not term pointers), then this might still be possible. But
+        you would need to either restrict yourself to ground terms or
+        interpret variables as standing for themselves. Be sure you know
+        what you're doing. ]
+      </p>
+<p>Every <tt>Term</tt> belongs to a frame. Unless initialized in an
+        assignment (by the copy constructor), it always starts in the
+        current frame. If a <tt>Term</tt> is assigned another one, then it
+        &#x2018;migrates&#x2019; to the frame of that term, unless
+        <tt>Term::assign()</tt> is used.
+      </p>
+<pre class="programlisting">Term::Term();
+</pre>
+<p>Create a new term which consists of a free variable, and make
+        the new <tt>Term</tt> point to it. It belongs to the current frame.
+      </p>
+<pre class="programlisting">template &lt;typename ForwardIterator&gt;
+Term::Term(const char* functor_name, ForwardIterator begin, ForwardIterator end);
+
+template &lt;typename ForwardIterator&gt;
+Term::Term(string functor_name, ForwardIterator begin, ForwardIterator end);
+
+template &lt;typename ForwardIterator&gt;
+Term::Term(Functor functor, ForwardIterator begin, ForwardIterator end);
+</pre>
+<p>Create a new term from a functor and a STL-style sequence. The
+        type of the values of the sequence can be <tt>Term</tt>, or any type which
+        can be converted to <tt>Term</tt>. For the first two constructors, the
+        arity is not needed. It is taken from the length of the sequence.
+        In the third constructor, a <tt>LogicError</tt> exception is raised of the
+        length of the sequence and the arity of the functor don't match.
+        The new <tt>Term</tt> belongs to the current frame.
+      </p>
+<pre class="programlisting">Term::Term(const long &amp;);
+Term::Term(const int &amp;);
+Term::Term(const double &amp;);
+Term::Term(void * const &amp;);
+</pre>
+<p>Create a new term containing the argument, and make the new
+        <tt>Term</tt> point to it. It belongs to the current frame.
+      </p>
+<pre class="programlisting">Term::Term(const Atom &amp;);
+</pre>
+<p>Create a new term which consists of the atom, and make the new
+        <tt>Term</tt> point to it.
+      </p>
+<pre class="programlisting">Term::Term(const Functor &amp;);
+</pre>
+<p>Create a new term which consists of the functor and free
+        variables. Make the new <tt>Term</tt> point to it.
+      </p>
+<pre class="programlisting">Term::Term(const char *);
+Term::Term(const string &amp;);
+</pre>
+<p>Parse the text and create a new term from it. If the text is
+        not well-formed, a <tt>ParseError</tt> exception is raised. Make the new <tt>Term</tt>
+        point to it. Use <tt>Term(Atom(text))</tt> instead, if
+        you wish to create a term which contains an atom which is the text. The new <tt>Term</tt>
+        belongs to the current frame.
+      </p>
+<pre class="programlisting">template &lt;typename InputIterator&gt;
+Term::Term(InputIterator begin, InputIterator end);
+</pre>
+<p>Create a new term containing a Prolog list. The arguments
+        specify an STL-style sequence. The value type of
+        <tt>InputIterator</tt> must be convertible to <tt>Term</tt>. The
+        new <tt>Term</tt> belongs to the current frame.
+      </p>
+<pre class="programlisting">
+template &lt;typename TargetType, class OutputIterator&gt;
+OutputIterator Term::copy_list(OutputIterator);
+</pre>
+<p>Assume the term is a Prolog list. Write its contents to the
+        output iterator, converting each element to
+        <tt>TargetType</tt>. The template parameter
+        <tt>OutputIterator</tt> can be infered, but
+        <tt>TargetType</tt> can't. So this template method is
+        called with one template parameter, like
+        &#x2018;<tt>t.copy_list&lt;int&gt;(it)</tt>&#x2019;.
+      </p>
+<p>(The target type can't be infered from the iterator
+        type, because STL output iterators don't have value types. The same
+        output iterator can be able to absorb values of several differnt types.)
+      </p>
+<p>The following paragraphs are relevant only if you want to
+        use <tt>copy_list</tt> to convert the element
+        terms to C strings (<tt>char*</tt> or <tt>const
+        char*</tt>).
+      </p>
+<p>
+<tt>copy_list&lt;&gt;</tt> has a different meaning
+        for the target type <tt>char*</tt> than for other types -
+        it doesn't write the values to the output iterator, but pointers to
+        them. The values themselves are on the heap, and must be deleted
+        later.
+      </p>
+<p>The default conversion of terms to <tt>char*</tt> isn't
+        applicable, because it wouldn't copy the strings to the C++ heap,
+        but leave them in a SWI-Prolog managed ring buffer, which is 16
+        entries large. Therefore <tt>copy_list&lt;&gt;</tt> is
+        specialised for the target type <tt>char*</tt>, such that
+        the strings are copied to the heap. The follwoing is an example of
+        how to use <tt>copy_list&lt;&gt;</tt>.
+      </p>
+<pre class="programlisting">void delete_cstr(char* p) { delete p; }
+
+// ...
+
+  Term t = &quot;[this, is, a, list(of(terms))]&quot;;
+  vector&lt;char*&gt; v;
+  t.copy_list&lt;char*&gt;(back_inserter(v));
+
+  cout &lt;&lt; &quot;contents of the vector: &quot;;
+  copy(v.begin(), v.end(), ostream_iterator&lt;char*&gt;(cout,&quot; &quot;));
+  cout &lt;&lt; endl;
+
+  for_each(v.begin(), v.end(), delete_cstr);
+</pre>
+<p>
+<tt>copy_term&lt;&gt;</tt> is
+        <i>not</i> specialised for <tt>const
+        char*</tt>, because copying the strings to the heap and then
+        returning a <tt>const</tt> pointer, which can't be used
+        to delete it, would result in a memory leak. The default conversion
+        returns pointers which point to memory managed by the SWI-Prolog
+        ring buffer, which is 16 entries large. So only lists up to 16
+        elements can be converted by <tt>copy_list&lt;const
+        char*&gt;()</tt>.
+      </p>
+<pre class="programlisting">Term::operator long () const;
+Term::operator int () const;
+Term::operator double () const;
+Term::operator void* () const;
+</pre>
+<p>Assume the term consists of a value of the respective type, and
+        return that value. Throw a <tt>ConversionError</tt> excpetion, if the term
+        can't be converted to the target type.
+      </p>
+<pre class="programlisting">Term::operator Atom () const;
+</pre>
+<p>Assume the term consists of an atom, and return it. Throw a
+        <tt>ConversionError</tt> exception, if it doesn't consist of an atom.
+      </p>
+<pre class="programlisting">Term::operator const char* () const;
+</pre>
+<p>Convert the term to a string, using
+        <a href="#term__to_str"><tt>Term::to_str()</tt></a>
+        with the default options. The returned pointer points to memory
+        managed by the Prolog engine. If the term consists solely of an
+        atom, then this is static memory which remains valid (at least as
+        long as the atom exists). Otherwise it is in a ring buffer, which
+        will eventually be deallocated. The string must be copied if it is
+        to be used other than short-term. (See
+        <tt>PL_get_chars()</tt> in the SWI-Prolog Reference Manual - &#x2018;if the data
+        is not static (as from an atom), the data is copied to the next
+        buffer from a ring of 16 buffers&#x2019;).
+      </p>
+<p>There is no <tt>Term::operator string</tt>, because
+        C++ strings can be created via <tt>operator const char*
+        ()</tt>, and adding an <tt>operator string ()</tt>
+        would make the conversion ambigious. Use
+        <tt>Term::to_string()</tt> for a slightly more
+        efficient conversion to <tt>string</tt>.
+      </p>
+<pre class="programlisting">template &lt;typename T&gt; Term::operator list&lt;T&gt; () const;
+</pre>
+<p>Assume the term is a Prolog list of values which can be
+        converted to <tt>T</tt>. Convert the term to a
+        <tt>list&lt;T&gt;</tt>. If the term can't be converted
+        this way, a <tt>ConversionError</tt> exception is thrown.
+      </p>
+<p>This template is specialized for <tt>char*</tt>,
+        copying the strings to the C++ heap instead of using the ring
+        buffer, like the default conversion would do. You are responsible
+        for eventually deleting them. Consider using
+        <tt>list&lt;string&gt;</tt> instead.
+      </p>
+<p>Using <tt>operator list&lt;const char*&gt;</tt> is
+        probably an error. The strings can't be copied to the heap, because
+        they could not be be deleted via the <tt>const char*</tt>
+        pointers. They are left in the SWI-Prolog managed ring buffer of 16
+        entries. Therefore only lists up to 16 elements long can be
+        converted this way. Use <tt>operator list&lt;string&gt;</tt>
+        instead.
+      </p>
+<p>Use <tt>Term::copy_list&lt;&gt;()</tt> in order to
+        store a Prolog list in a different type of container.
+      </p>
+<a name="term__to_str"></a><pre class="programlisting">static const unsigned Term::default_cvt_flags = CVT_WRITE|CVT_VARIABLE;
+
+char*  Term::to_str   (unsigned flags = default_cvt_flags) const;
+string Term::to_string(unsigned flags = default_cvt_flags) const;
+</pre>
+<p>This are the conversions of terms to strings, as provided by the
+        Foreign Language Interface function <tt>PL_get_chars()</tt>. The flags specify
+        what kinds of terms should be converted. If the term isn't of such
+        a kind, then a <tt>CvtError</tt> exception is raised. The flags are
+        (mostly...) documented in the SWI-Prolog Reference Manual.
+      </p>
+<p>The pointer returned by
+        <tt>to_str()</tt> points to memory managed by the Prolog
+        engine. If the term consists solely of an atom, then this is static
+        memory which remains valid (at least as long as the atom exists).
+        Otherwise it is in a ring buffer, which will eventually be
+        deallocated. The string must be copied if it is to be used other
+        than short-term. (See <tt>PL_get_chars()</tt> in the
+        SWI-Prolog Reference Manual - &#x2018;if the data is not static (as from an atom), the
+        data is copied to the next buffer from a ring of 16
+        buffers&#x2019;).
+      </p>
+<pre class="programlisting">Term::Term(const Term&amp; t2);
+Term&amp; Term::operator = (const Term&amp; t2);
+void Term::swap(Term&amp; t);
+</pre>
+<p>These implement the concept <a href="#concepta" title="Assignable">Assignable</a>, except for the frame
+        membership. The assignment and the copy constructor make the new
+        term belong to the frame of t2. The <tt>swap</tt> method
+        makes the two terms change frames. See <a href="#frfrm" title="Frames and Frame Membership">the section called &#x201C;Frames and Frame Membership&#x201D;</a> for a detailed
+        discussion of frame membership.
+      </p>
+<pre class="programlisting">bool Term::operator == (const Term&amp;) const;
+bool Term::operator != (const Term&amp;) const;
+bool Term::operator &gt;  (const Term&amp;) const;
+bool Term::operator &lt;  (const Term&amp;) const;
+bool Term::operator &gt;= (const Term&amp;) const;
+bool Term::operator &lt;= (const Term&amp;) const;
+</pre>
+<p>These operators compare two terms in standard term order. They
+        do not compare the pointers which the <tt>Term</tt> objects conceptually
+        are.
+      </p>
+<a name="term__unify"></a><pre class="programlisting">template &lt;typename T&gt;
+bool Term::unify(const T&amp;) const;
+</pre>
+<p>Unify the two terms. Returns <tt>true</tt> of successful.
+      </p>
+<pre class="programlisting">Term Term::operator [] (int n) const;
+</pre>
+<p>Get the n-th subterm of the term. n starts at zero. Raises a
+        <tt>LogicError</tt> exception if the term is not compound, or the index is
+        outside the range 0..arity-1.
+      </p>
+<pre class="programlisting">Functor Term::functor() const;
+</pre>
+<p>Get the functor of the term. An atom counts as a functor with
+        arity zero. Raises a <tt>ConversionError</tt> exception if the term is neither compound
+        nor an atom.
+      </p>
+<pre class="programlisting">TermType Term::type() const;
+</pre>
+<p>Return the type of the term, which is one of the enumeration
+        values of <a href="#termtype" title="TermType">TermType</a>.
+      </p>
+<pre class="programlisting">void Term::copy();
+</pre>
+<p>Make a deep copy of the term, and make the <tt>Term</tt> object to the
+        new term. If the old term shares any parts with other terms, this
+        will no longer be the case for the copy.
+      </p>
+<pre class="programlisting">void Term::assign(Term);
+</pre>
+<p>
+<tt>t1.assign(t2)</tt> makes <tt>t1</tt>
+        point to the same term as t2, in such a way that (unlike
+        <tt>t1 = t2</tt>) <tt>t1</tt> does not migrate
+        to the frame of <tt>t2</tt>. Apart from this, it does the
+        same as an ordinary assignment, <i>provided</i> you
+        guarantee that there exists only one copy of <tt>t1</tt>.
+        If this is not the case, you will break the pointer semantics of
+        <tt>Term</tt>. <i>Use with care!</i> See <a href="#frfrm" title="Frames and Frame Membership">the section called &#x201C;Frames and Frame Membership&#x201D;</a> for a detailed discussion.
+      </p>
+<pre class="programlisting">string Term::to_external();
+static Term Term::from_external(string);
+</pre>
+<p>The first one converts the term to its external representation, as described
+        in the SWI-Prolog Reference Manual. The second one creates a new term from an external
+        representation. If this fails, a <tt>FormatError</tt> exception is raised.
+      </p>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="blockquote" summary="Block quote">
+<tr>
+<td width="10%" valign="top"> </td>
+<td width="80%" valign="top">
+<p>The returned data [the external representation] has
+          properties that enable storing the data
+          on an external device. It has been designed to make it possible to
+          store Prolog terms fast an compact in an external database. Here
+          are the main features:
+        </p>
+<div class="itemizedlist"><ul>
+<li>
+<a name="id2765139"></a><p>
+<b>Independent of session</b> 
+            Records can be communicated to another
+              Prolog session and made visible using
+              PL_recorded_external().</p>
+</li>
+<li>
+<a name="id2765132"></a><p>
+<b>Binary</b> 
+            The representation is binary for maximum
+              performance. The returned data may contain
+              0-bytes.</p>
+</li>
+<li>
+<a name="id2765163"></a><p>
+<b>Byte-order independent</b> 
+            The representation can be transferred
+              between machines with different
+              byte-order.</p>
+</li>
+<li>
+<a name="id2765177"></a><p>
+<b>No alignment restrictions</b> 
+            There are no memory alignment restrictions
+              and copies of the record can thus be moved freely. For
+              example, it is possible to use this representation to
+              exchange terms using shared memory between different Prolog
+              processes. </p>
+</li>
+<li>
+<a name="id2765194"></a><p>
+<b>Compact</b> 
+            It is assumed that a smaller memory
+              footprint will eventually outperform slightly faster
+              representations.</p>
+</li>
+<li>
+<a name="id2765210"></a><p>
+<b>Stable</b> 
+            The format is designed for future
+              enhancements without breaking compatibility with older
+              records.</p>
+</li>
+</ul></div>
+</td>
+<td width="10%" valign="top"> </td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">--<span class="attribution">The SWI-Prolog 4.0.9 Reference Manual, in section 5.6.11.2
+        </span>
+</td>
+<td width="10%" valign="top"> </td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="termtype"></a><div class="titlepage"><div><h3 class="title">
+<a name="termtype"></a>TermType</h3></div></div>
+<p>This is an enumeration of the types of a term, as defined
+        by Prolog.
+      </p>
+<div class="informaltable" id="id2765245">
+<a name="id2765245"></a><table border="1">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td><tt>tt_variable</tt></td>
+<td>a free variable</td>
+</tr>
+<tr>
+<td><tt>tt_atom</tt></td>
+<td>an atom</td>
+</tr>
+<tr>
+<td><tt>tt_string</tt></td>
+<td>a Prolog string</td>
+</tr>
+<tr>
+<td><tt>tt_integer</tt></td>
+<td>an integer</td>
+</tr>
+<tr>
+<td><tt>tt_float</tt></td>
+<td>a floating point number</td>
+</tr>
+<tr>
+<td><tt>tt_compound</tt></td>
+<td>a compound term</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section">
+<a name="id2765346"></a><div class="titlepage"><div><h3 class="title">
+<a name="id2765346"></a><tt>ForeignPredicate</tt></h3></div></div>
+</div>
+</div>
+<div class="section">
+<a name="id2765359"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2765359"></a>Exceptions</h2></div></div>
+<pre class="programlisting">struct PlError
+{
+  virtual Term   as_term() const = 0;
+  virtual string message() const = 0;
+};
+</pre>
+<p>This is the base class of all exceptions raised by SwiProlog-C++.
+      The <tt>as_term()</tt> method is used to convert the
+      exception to a Prolog exception, which is a term. When it is raised
+      withing a foreign predicate, this is used to hand it over to the
+      Prolog engine. <tt>message()</tt> produces an error
+      message.
+      </p>
+<p>Most of the following exception classes have a
+      <tt>place</tt> attribute. It contains the method or
+      function in which the exception was raised.
+      </p>
+<pre class="programlisting">class PrologException : public PlError
+{
+public:
+  PrologException(Term);
+  Term   as_term() const;
+  string message() const;
+};
+</pre>
+<p>This is the C++ version of a Prolog exception, which has been
+      raised in a query. It is packaged as a
+      <tt>PrologException</tt> by
+      <tt>Query::next()</tt>, and thrown as a C++ exception.
+      </p>
+<a name="unsafeprologexception"></a><pre class="programlisting">class UnsafePrologException : public PrologException
+{
+  Term ex;
+public:
+  UnsafePrologException(Term e) : ex(e) {}
+
+  Term   as_term() const;
+  string message() const;
+
+  void PL_raise_exception() {
+    PL_raise_exception(ex.lsi);
+  }
+}
+</pre>
+<p>This is thrown instead of <tt>PrologException</tt> if the
+        <a href="#unsafe_exceptions"><tt>unsafe_exceptions</tt></a>
+        flag of <tt>Query</tt> is used. The method <tt>PL_raise_exception()</tt> is
+        for experts of the Foreign Language Interface only. Quoting Jan Wielemaker from a mail:
+        &#x201C;After <tt>PL_raise_exception()</tt> the term
+        itself is bound to a very old (and thus long living) reserved
+        term-reference as well. This is the term-reference returned by
+        <tt>PL_exception()</tt>.&#x201D;
+      </p>
+<pre class="programlisting">struct LogicError : public PlError
+{
+  const char* place;
+  const char* msg;
+  LogicError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message() const;
+};
+</pre>
+<p>This indicates a bug in the program.
+      </p>
+<pre class="programlisting">struct FormatError : public PlError
+{
+  const char* place;
+  const char* msg;
+  FormatError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message() const;
+};
+</pre>
+<p>This indicates malformed data. It is currently only thrown by
+      <tt>Term::from_external()</tt>.
+      </p>
+<pre class="programlisting">struct ParseError : public PlError
+{
+  const char* place;
+  const char* text;
+  ParseError(const char* p, const char* t) : place(p), text(t) {}
+  Term   as_term() const;
+  string message() const;
+};
+</pre>
+<p>An error parsing the specified text, which should contain a
+      term. Thrown by <tt>Term::Term(const char*)</tt> and
+      <tt>Term::Term(string)</tt>.
+      </p>
+<pre class="programlisting">struct ConversionError : public PlError
+{
+  const char* place;
+  const char* msg;
+  ConversionError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message() const;
+};
+</pre>
+<p>This indicates a failed conversion between two of SwiProlog-C++s
+      data types; mostly from or to <tt>Term</tt>. For instance, it will be thrown
+      when trying to convert a compound term to an integer.
+      </p>
+<pre class="programlisting">struct CvtError : public ConversionError
+{
+  CvtError(const char* p)
+    : ConversionError(p, &quot;not to be converted&quot;) {}
+  Term   as_term() const;
+};
+</pre>
+<p>This indicates failure to represent a term as a string. The
+      flags argument of <tt>Term::to_str()</tt> and
+      <tt>Term::to_string()</tt> indicates what kinds of terms
+      should be converted. If the given term is not of such a type, then
+      this exception is thrown. XXX
+      </p>
+<pre class="programlisting">struct GeneralError : public PlError
+{
+  const char* place;
+  const char* msg;
+  GeneralError(const char* p, const char* m) : place(p), msg(m) {}
+  Term   as_term() const;
+  string message();
+};
+</pre>
+<p>This can only be thrown by <tt>prolog_init()</tt>, in
+      case of failed initialisation. See <a href="#startstop" title="Starting and Restarting the Prolog Engine">the section called &#x201C;Starting and Restarting the Prolog Engine&#x201D;</a>.
+      </p>
+</div>
+</div>
+<div class="chapter">
+<div class="titlepage"><div><h2 class="title">
+<a name="id2765677"></a>Chapter 4. Implementation Notes</h2></div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt> <a href="#memman">SWI-Prolog Memory Management</a>
+</dt>
+<dt> <a href="#termsemantics">Semantics of <tt>Term</tt> Objects</a>
+</dt>
+<dt> <a href="#initqueue">Init Queues</a>
+</dt>
+<dt> <a href="#fopre">Foreign Predicates</a>
+</dt>
+<dt> <a href="#implframes">Frames</a>
+</dt>
+<dt> <a href="#id2766350">Queries</a>
+</dt>
+</dl>
+</div>
+<p>This chapter discusses various implementation aspects of
+        SwiProlog-C++. It is meant for people who want to maintain or improve
+        it, or just want to understand the source code. Normal users of the
+        interface do not need these notes.
+      </p>
+<div class="section">
+<a name="memman"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="memman"></a>SWI-Prolog Memory Management</h2></div></div>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2765709"></a>All new term references are created on the local stack. When
+            a foreign predicate returns, or a frame is left, these references
+            are invalidated. So all terms created have a limited life time.
+            In order to use them as global data on the C++ side, they must be
+            saved somehow.
+          </p></li>
+<li><p>
+<a name="id2765724"></a>Most actions, such as creating terms, require the prolog
+            engine to run. ...
+          </p></li>
+</ul></div>
+</div>
+<div class="section">
+<a name="termsemantics"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="termsemantics"></a>Semantics of <tt>Term</tt> Objects</h2></div></div>
+<p>The only way to refer to terms are by term_t values, as
+        provided by the Foreign Language Interface. A term_t is an index on the local stack.
+        The stack cells are like pointers to terms. So a term_t has the
+        semantics of a pointer to pointers to terms (not of a pointer to
+        terms). This means that, as well as the terms pointed to, the local
+        stack cells can change. For instance:
+      </p>
+<pre class="programlisting">// create two term_t's pointing to the term &quot;42&quot;
+term_t t1 = PL_new_term_ref();
+term_t t2 = t1;
+PL_put_integer(t1, 42);
+
+// change one
+PL_put_atom_chars(t1, &quot;hello&quot;);
+
+// now both term_t's point to &quot;hello&quot;
+</pre>
+<p>The most direct way would be to encapsulate a term_t in a class
+        <tt>Term</tt> and to define appropriate operators and methods for it. This
+        would give <tt>Term</tt>s the semantics of being pointers to pointers
+        to terms, too. The programmer would have to manually create stack
+        cells and deal with pointers to them, just like in the C language Foreign Language Interface
+      </p>
+<p>This makes working with terms unnecessarily tedious, error prone
+        and complex. It is possible to transparently handle the enclosed
+        term_ts in such a way that <tt>Term</tt> objects have the semantics of
+        pointers to terms instead, which allows for a much more intuitive,
+        direct programming style. There are two ways to accomplish this.
+      </p>
+<div class="orderedlist"><ol type="1"></ol></div>
+<p>The first approach has the advantage that it is efficient. A
+        <tt>Term</tt> object structurally consists only of a term_t attribute,
+        which is copied and passed around just like in the C interface (all
+        the methods are inline).
+      </p>
+<p>However, it badly interacts with frames. Leaving a frame
+        invalidates stack cells. Since the stack cell a <tt>Term</tt> uses, changes
+        with each assignment to it, it is hard to predict which <tt>Term</tt>s wiil
+        be invalidated.
+      </p>
+<pre class="programlisting">Term t1;
+{
+  Frame f;
+  Term t2(42);
+  t1 = t2;
+}
+// now t1 _and_ t2 are invalid
+</pre>
+<p>Even worse, it's impossible to save references to terms created
+        inside a frame, like you can when using the C interface.
+      </p>
+<pre class="programlisting">term_t t1 = PL_new_term_ref();
+
+  fid_t f = PL_open_foreign_frame();
+  term_t t2 = PL_new_term_ref();
+  // ... create data and make t2 point to it ...
+
+  // save reference in t1 before t2 is lost, and close frame
+  PL_put_term(t1, t2);
+  PL_close_foreign_frame(f);
+
+// now t2 is invalid, but t1 points to the data
+</pre>
+<p>These frame related problems don't occur with the second
+        approach. But it would make using <tt>Term</tt> objects quite inefficient.
+        Every time you pass a <tt>Term</tt> by value, PL_copy_term_ref() is called,
+        and a stack cell is consumed. This would in effect force you to use
+        references or pointers to <tt>Term</tt>s instead, making you unable to use
+        <tt>Term</tt>s the way they are supposed to, like pointers.
+      </p>
+<p>It is legal to write to a stack cell, provided the <tt>Term</tt> holding
+        it is the only one to do so. The changing of the cell will not affect
+        any other <tt>Term</tt>s as well.
+      </p>
+<p>
+      </p>
+
+      - nur beim Erzeugen neuer Terme werden Kellerzellen angelegt
+
+    </div>
+<div class="section">
+<a name="initqueue"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="initqueue"></a>Init Queues</h2></div></div>
+<p>The &#x201C;static&#x201D; classes automatically (re)initialise
+        themselves. In order to be notfied when this is necessary, they
+        derive protectely from the class <tt>Init</tt>, which
+        makes them members of an init queue.
+      </p>
+<p>Init queue members have two methods, <tt>thaw()</tt>
+        and <tt>freeze()</tt>. They get thawed when they need to
+        be initialised, and frozen when they need to save some state. There
+        are two init queues. All members are thawed/frozen on certain
+        occasions.
+      </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2766057"></a>The <i>engine queue</i> is thawed when the
+            Prolog engine has been initialised. This causes the
+            <tt>Static...</tt> class objects to initialise
+            themselves as well. It is frozen, before it goes down.
+          </p></li>
+<li><p>
+<a name="id2766080"></a>One <i>frame queue</i> per frame. It gets
+            frozen when the frame goes out of scope. It doesn't cause any
+            thawing. The objects need to check for themselves. This queue
+            is only used by <tt>StaticQuery</tt>.
+          </p></li>
+</ul></div>
+<p>When an object is enqueued in the engine queue, and the engine
+        is already running, it is thawed immediately by calling the
+        <tt>thaw()</tt> method. The object initialises itself in
+        frozen state. Then it enqueues itself and maybe get thawed
+        immediately.
+      </p>
+<p>This means that the class <tt>Init</tt> part of the
+        object need to be created last. Its initialisation doesn't take
+        part in its constructor, but is defered, and explicitly called from
+        inside the larger object's constructor.
+      </p>
+<p>The class <tt>Init</tt> looks like this.
+      </p>
+<pre class="programlisting">struct Init
+{
+  Init*  next;    // next queue element
+  Init** prev;    // pointer to pointer pointing to this element
+
+  Init(Defer);    // no initialisation (enqueueing) yet
+
+  // initialisation takes place here
+  void enqueue(Init** queue);
+
+  ~Init();        // dequeue oneself
+
+  virtual void thaw() = 0;
+  virtual void freeze() = 0;
+
+  void thaw_all();     // thaw entire queue starting here
+  void freeze_all();   // freeze entire queue starting here
+};
+</pre>
+</div>
+<div class="section">
+<a name="fopre"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="fopre"></a>Foreign Predicates</h2></div></div>
+<p>SWI-Prolog has two methods of calling foreign functions, and two
+        corresponding kinds of signatures. Both of them use the C interface
+        types, such as <tt>foreign_t foo(term_t, term_t)</tt>. We
+        want to interface to functions like <tt>bool foo(Term,
+          Term)</tt>, and translate Prolog exceptions to C++ exceptions
+        and vice versa. So wee need wrapper functions which comply to the C
+        signatures, do the conversions and translations, and call the C++
+        functions. It does not seem to be possible to determine the
+        name/arity of the predicate being called inside some generic
+        function, so we need one real wrapper function per foreign predicate.
+      </p>
+<p>Such wrapper functions could be automatically generated with the
+        help of templates. The templates would look like this.
+      </p>
+<pre class="programlisting">template &lt;bool (*Fkt)()&gt;
+foreign_t fp_helper()
+{
+  try {
+    return (Fkt() ? TRUE : FALSE);
+  } catch (const char* ex) {
+    return PL_raise_exception(Term(Atom(ex)).lsi);
+  }
+}
+
+template &lt;bool (*Fkt)(Term)&gt;
+foreign_t fp_helper(term_t t1)
+{
+  try {
+    return (Fkt(Term(t1)) ? TRUE : FALSE);
+  } catch (const char* ex) {
+    return PL_raise_exception(Term(Atom(ex)).lsi);
+  }
+}
+
+template &lt;bool (*Fkt)(Term, Term)&gt;
+foreign_t fp_helper(term_t t1, term_t t2)
+{
+  try {
+    return (Fkt(Term(t1, t2)) ? TRUE : FALSE);
+  } catch (const char* ex) {
+    return PL_raise_exception(Term(Atom(ex)).lsi);
+  }
+}
+
+// and so on
+</pre>
+<p>Alas, GCC bugs prevent this. It seems like it's impossible to
+        take the address of a template function. For now, we use macros
+        instead. We also need to use the other calling convention, which
+        leads to the current implementation.
+      </p>
+</div>
+<div class="section">
+<a name="implframes"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="implframes"></a>Frames</h2></div></div>
+<p>Only terms (<tt>Term</tt> and its variants <tt>RecordedTerm</tt> and
+        <tt>StaticTerm</tt>) are affected by frames. All the other things (atoms,
+        functors, foreign predicates and so on) live as long as the engine.
+      </p>
+<p>A frame going out of scope has two effects. First, all bindings
+        done inside it are undone. This can potentially affect all terms, but
+        they stay valid. Second, all local stack indices created inside the
+        frame, ald all <tt>Term</tt>s using them are invalidated. There is an
+        implicit frame, in which every foreign predicate invocation runs.
+        Explicit frames can be created with the <tt>Frame</tt> class as well.
+      </p>
+<p>There is no way to rescue term references from being invalidated
+        once a frame is entered. You can only create free variables before the
+      </p>
+<p>Leaving a frame invalidates the <tt>Term</tt> parts of <tt>RecordedTerm</tt>s
+        and <tt>StaticTerm</tt>s. There are no special measures to take for <tt>Term</tt>s.
+        They just become invalid and must not be used any longer. The other
+        two, however, are supposed to survive.
+      </p>
+<p>An automatic wakeup feature for <tt>RecordedTerm</tt> shoed not to be
+        feasible, because you can't keep track of which frame the <tt>Term</tt>
+        part of a <tt>RecordedTerm</tt> belongs to. The <tt>RecordedTerm</tt> can't know
+        when its <tt>Term</tt> part becomes invalid.
+      </p>
+</div>
+<div class="section">
+<a name="id2766350"></a><div class="titlepage"><div><h2 class="title" style="clear: both">
+<a name="id2766350"></a>Queries</h2></div></div>
+<p>The following components are require by the Foreign Language Interface in order to
+        execute a query.
+      </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2766367"></a> a context module identifier </p></li>
+<li><p>
+<a name="id2766376"></a> an array of term references for the arguments </p></li>
+<li><p>
+<a name="id2766385"></a> a predicate identifier </p></li>
+</ul></div>
+<p>A <tt>Query</tt> packages just that. The term references array is
+        reused. It does not do any re-initialising like the
+        <tt>Static</tt>... classes. When the frame in which the
+        query was created is left, the term references, and so the query is
+        invalidated.
+      </p>
+<p>A <tt>StaticQuery</tt> additionally has the follwoing components.
+      </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2766427"></a> A <tt>RecordedTerm</tt> attribute <tt>callterm</tt>.
+            This stores predefined subterms of the query predicate
+            (arguments for an ordinary <tt>Query</tt>), and has the actual
+            arguments as crosswise bound variables, like
+            <tt>args(arg1(foo(X),_),bar(Y), X,Y)</tt>.
+          </p></li>
+<li><p>
+<a name="id2766462"></a>
+          </p></li>
+<li><p>
+<a name="id2766470"></a>
+          </p></li>
+</ul></div>
+<p>A <tt>StaticQuery</tt> reinitialises itself in two differerent ways,
+        and needs to be member of both init queues. Because it can be a
+        subclass of <tt>Init</tt> only once, the engine queue
+        membership is implemented by an attribute.
+      </p>
+<div class="itemizedlist"><ul>
+<li><p>
+<a name="id2766502"></a>When the frame is closed, the array of term
+            references for the query arguments is invalidated. The
+            <tt>freeze()</tt> is used to reset the
+            <tt>predargs</tt> attribute, so it can later be
+            reinitialised.
+          </p></li>
+<li><p>
+<a name="id2766528"></a>When the engine is initialised, the <tt>StaticQuery</tt> object
+            does its full initialisation. When the engine does down, it
+            takes notice, so it can reinitialse later.
+          </p></li>
+</ul></div>
+<p>
+      </p>
+</div>
+</div>
+</div></body>
+</html>
