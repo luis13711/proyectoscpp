@@ -1,0 +1,17 @@
+﻿Compilación iniciada a las 14/10/2012 08:11:03 p.m..
+     1>Proyecto "c:\Users\luis alberto\documents\visual studio 2010\Projects\EnumeracionC++\EnumeracionC++\EnumeracionC++.vcxproj" en el nodo 2 (build destinos).
+     1>InitializeBuildStatus:
+         Se creará "Debug\EnumeracionC++.unsuccessfulbuild" porque se especificó "AlwaysCreate".
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\luis alberto\documents\visual studio 2010\projects\enumeracionc++\enumeracionc++\main.cpp(16): error C2057: se esperaba una expresión constante
+     1>c:\users\luis alberto\documents\visual studio 2010\projects\enumeracionc++\enumeracionc++\main.cpp(16): error C2057: se esperaba una expresión constante
+     1>c:\users\luis alberto\documents\visual studio 2010\projects\enumeracionc++\enumeracionc++\main.cpp(17): error C2057: se esperaba una expresión constante
+     1>c:\users\luis alberto\documents\visual studio 2010\projects\enumeracionc++\enumeracionc++\main.cpp(28): error C2196: el valor de case '0' ya se ha utilizado
+     1>c:\users\luis alberto\documents\visual studio 2010\projects\enumeracionc++\enumeracionc++\main.cpp(30): error C2196: el valor de case '0' ya se ha utilizado
+     1>Compilación del proyecto terminada "c:\Users\luis alberto\documents\visual studio 2010\Projects\EnumeracionC++\EnumeracionC++\EnumeracionC++.vcxproj" (build destinos) -- ERROR.
+
+ERROR al compilar.
+
+Tiempo transcurrido 00:00:00.70

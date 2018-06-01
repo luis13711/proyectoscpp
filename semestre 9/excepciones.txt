@@ -1,0 +1,31 @@
+	int entero(char pal[])
+	{
+		int entero=0;
+		int valor=1;
+		for(int i=strlen(pal)-1;i>=0;i--)
+		{
+			
+			entero+=(((int)(pal[i])-48))*valor;
+			valor*=10;
+		}
+
+		return entero;
+	}
+	bool isInteger(char pal[])
+	{
+		int entero=0;
+		int valor=1;
+		for(int i=strlen(pal)-1;i>=0;i--)
+		{
+			if(!(pal[i]=='1'||pal[i]=='2'||pal[i]=='3'
+				||pal[i]=='4'||pal[i]=='5'||pal[i]=='6'
+				||pal[i]=='7'||pal[i]=='8'||pal[i]=='9'
+				||pal[i]=='0')
+				)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}

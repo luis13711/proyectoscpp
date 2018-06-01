@@ -1,0 +1,22 @@
+﻿Compilación iniciada a las 20/10/2012 07:11:58 p.m..
+     1>Proyecto "c:\Users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\SorecargaComplejo\SorecargaComplejo.vcxproj" en el nodo 2 (build destinos).
+     1>InitializeBuildStatus:
+         Se creará "Debug\SorecargaComplejo.unsuccessfulbuild" porque se especificó "AlwaysCreate".
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\Debug\SorecargaComplejo.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\SorecargaComplejo.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"c:\users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\Debug\SorecargaComplejo.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"c:\users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\Debug\SorecargaComplejo.lib" /MACHINE:X86 Debug\main.obj
+         Debug\SobrecargaComplejo.obj
+         LINK : no se encontró c:\users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\Debug\SorecargaComplejo.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
+         SorecargaComplejo.vcxproj -> c:\users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\Debug\SorecargaComplejo.exe
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"c:\users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\Debug\SorecargaComplejo.exe;#1" /manifest Debug\SorecargaComplejo.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Se eliminará el archivo "Debug\SorecargaComplejo.unsuccessfulbuild".
+         Aplicando tarea Touch a "Debug\SorecargaComplejo.lastbuildstate".
+     1>Compilación del proyecto terminada "c:\Users\luis alberto\documents\visual studio 2010\Projects\SorecargaComplejo\SorecargaComplejo\SorecargaComplejo.vcxproj" (build destinos).
+
+Compilación correcta.
+
+Tiempo transcurrido 00:00:01.50
